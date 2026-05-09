@@ -1,0 +1,39 @@
+# Xcode
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+*.xcworkspace/*
+!*.xcworkspace/contents.xcworkspacedata
+xcuserdata/
+*.xccheckout
+*.moved-aside
+DerivedData/
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# macOS
+.DS_Store
+*.swp
+*~
+
+# IDEs
+.idea/
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+
+# Build
+build/
+
+# Secrets
+.env
+*.env
+
+# Claude Code
+.claude/settings.local.json

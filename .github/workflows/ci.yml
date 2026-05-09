@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        run: cd Veil && xcodegen generate
+
+      - name: Build
+        run: |
+          xcodebuild \
+            -project Veil/Veil.xcodeproj \
+            -scheme Veil \
+            -configuration Debug \
+            CODE_SIGN_IDENTITY="-" \
+            CODE_SIGNING_REQUIRED=NO \
+            ENABLE_HARDENED_RUNTIME=NO \
+            build

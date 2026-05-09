@@ -1,0 +1,432 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		038D9BB8039DF8421D68CDC8 /* FullscreenDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617A44227A01F72F31D78165 /* FullscreenDetector.swift */; };
+		04298B074B53CE8DD7500620 /* FullscreenMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F3394B387101C592775E136 /* FullscreenMonitor.swift */; };
+		12B280FB6CF6455C4CD77B2F /* OverlayWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 509B5E1448C647DFD722F76B /* OverlayWindow.swift */; };
+		165EB07B7638278BD15F15CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA46B33407E5BD551B51FF89 /* Assets.xcassets */; };
+		1733B83CED83DC5C3DF96711 /* NSScreen+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB257A3C762FBC3B1D03F68 /* NSScreen+Extensions.swift */; };
+		21D9DEED680350296B8ED47B /* StatusBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C7D963C4459BC9EE7C41318 /* StatusBarController.swift */; };
+		33F96271170B6608A030D7C3 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16D21E5BAFF9B48CC23AD64 /* AppState.swift */; };
+		4BA37C76E0DB8E791BED54D8 /* DS.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE900AE215A90421C1979061 /* DS.swift */; };
+		5EFF03E41D09C4C39B44B8A2 /* FlipClockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 892CD4A8ECAAC20D6122FB46 /* FlipClockView.swift */; };
+		673776B1E3EA5DF679D6526E /* MediaAppDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A4A5777101F6DEFE5736056 /* MediaAppDetector.swift */; };
+		75B294F30BEF0F01E8760776 /* VeilApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6174227325AD868B034A10BB /* VeilApp.swift */; };
+		81858CE05425C45B2A5ECAF5 /* AppListSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353E596768792A98C0EBF5DB /* AppListSettingsView.swift */; };
+		BC7E85A74520227AD75A612D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E94A3619AF425880A3F48CF1 /* AppDelegate.swift */; };
+		CB31BC5E87FCFD180DABE765 /* DisplayOverlayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52DA3179161CD42FD9E2AA59 /* DisplayOverlayManager.swift */; };
+		FFE6703AE8E28B6704956666 /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2C65BFF2C85B97EBB6AEE0B /* MenuBarView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		03B859D07A35918BDFCBCF1D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		1A4A5777101F6DEFE5736056 /* MediaAppDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaAppDetector.swift; sourceTree = "<group>"; };
+		2F3394B387101C592775E136 /* FullscreenMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenMonitor.swift; sourceTree = "<group>"; };
+		353E596768792A98C0EBF5DB /* AppListSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppListSettingsView.swift; sourceTree = "<group>"; };
+		509B5E1448C647DFD722F76B /* OverlayWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayWindow.swift; sourceTree = "<group>"; };
+		52DA3179161CD42FD9E2AA59 /* DisplayOverlayManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayOverlayManager.swift; sourceTree = "<group>"; };
+		5C7D963C4459BC9EE7C41318 /* StatusBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarController.swift; sourceTree = "<group>"; };
+		6174227325AD868B034A10BB /* VeilApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VeilApp.swift; sourceTree = "<group>"; };
+		617A44227A01F72F31D78165 /* FullscreenDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenDetector.swift; sourceTree = "<group>"; };
+		892CD4A8ECAAC20D6122FB46 /* FlipClockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlipClockView.swift; sourceTree = "<group>"; };
+		90E4AC534E82262B16D60291 /* Veil.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Veil.entitlements; sourceTree = "<group>"; };
+		A16D21E5BAFF9B48CC23AD64 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		AAB257A3C762FBC3B1D03F68 /* NSScreen+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSScreen+Extensions.swift"; sourceTree = "<group>"; };
+		C27B23FAFE3C177EB5040C6C /* Veil.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Veil.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C2C65BFF2C85B97EBB6AEE0B /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
+		DE900AE215A90421C1979061 /* DS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DS.swift; sourceTree = "<group>"; };
+		E94A3619AF425880A3F48CF1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		EA46B33407E5BD551B51FF89 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		02E199E9FFCF4FF36A2F2966 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				52DA3179161CD42FD9E2AA59 /* DisplayOverlayManager.swift */,
+				617A44227A01F72F31D78165 /* FullscreenDetector.swift */,
+				2F3394B387101C592775E136 /* FullscreenMonitor.swift */,
+				1A4A5777101F6DEFE5736056 /* MediaAppDetector.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		11C994F491223EC129683D76 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				DE900AE215A90421C1979061 /* DS.swift */,
+				AAB257A3C762FBC3B1D03F68 /* NSScreen+Extensions.swift */,
+				509B5E1448C647DFD722F76B /* OverlayWindow.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		1281A1B1AA4C406964EAD3FC /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				EA46B33407E5BD551B51FF89 /* Assets.xcassets */,
+				F8EF547AA9B817F4164C36F4 /* Assets.xcstore */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		1F9162EF68F29EBD7862A9D6 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				892CD4A8ECAAC20D6122FB46 /* FlipClockView.swift */,
+				C2C65BFF2C85B97EBB6AEE0B /* MenuBarView.swift */,
+				5C7D963C4459BC9EE7C41318 /* StatusBarController.swift */,
+				9A114320146679BA457F8175 /* Settings */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		5D17F2C51DF361C4BA81680B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C27B23FAFE3C177EB5040C6C /* Veil.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9A114320146679BA457F8175 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				353E596768792A98C0EBF5DB /* AppListSettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		CA7F678E52ED57AD84E4270B /* AccentColor.colorset */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = AccentColor.colorset;
+			sourceTree = "<group>";
+		};
+		D1C0CE43E804C61EAEF06722 = {
+			isa = PBXGroup;
+			children = (
+				EDAB5D0219781696A708CEB3 /* Veil */,
+				5D17F2C51DF361C4BA81680B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		EDAB5D0219781696A708CEB3 /* Veil */ = {
+			isa = PBXGroup;
+			children = (
+				E94A3619AF425880A3F48CF1 /* AppDelegate.swift */,
+				A16D21E5BAFF9B48CC23AD64 /* AppState.swift */,
+				03B859D07A35918BDFCBCF1D /* Info.plist */,
+				90E4AC534E82262B16D60291 /* Veil.entitlements */,
+				6174227325AD868B034A10BB /* VeilApp.swift */,
+				11C994F491223EC129683D76 /* Helpers */,
+				1281A1B1AA4C406964EAD3FC /* Resources */,
+				02E199E9FFCF4FF36A2F2966 /* Services */,
+				1F9162EF68F29EBD7862A9D6 /* Views */,
+			);
+			path = Veil;
+			sourceTree = "<group>";
+		};
+		F8EF547AA9B817F4164C36F4 /* Assets.xcstore */ = {
+			isa = PBXGroup;
+			children = (
+				CA7F678E52ED57AD84E4270B /* AccentColor.colorset */,
+			);
+			path = Assets.xcstore;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		801C7AA53D4F046F4C345882 /* Veil */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 03F464A0DF4BCA1ED21A7E71 /* Build configuration list for PBXNativeTarget "Veil" */;
+			buildPhases = (
+				FF2D38BF50B0933E192BDAF0 /* Sources */,
+				11ADAFE04EF9A3A7EB43C690 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Veil;
+			packageProductDependencies = (
+			);
+			productName = Veil;
+			productReference = C27B23FAFE3C177EB5040C6C /* Veil.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C4D6CD16DB62B52C15013FC5 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					801C7AA53D4F046F4C345882 = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 45B919B56ACB645EA9A6B199 /* Build configuration list for PBXProject "Veil" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = D1C0CE43E804C61EAEF06722;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 5D17F2C51DF361C4BA81680B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				801C7AA53D4F046F4C345882 /* Veil */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		11ADAFE04EF9A3A7EB43C690 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				165EB07B7638278BD15F15CB /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		FF2D38BF50B0933E192BDAF0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BC7E85A74520227AD75A612D /* AppDelegate.swift in Sources */,
+				81858CE05425C45B2A5ECAF5 /* AppListSettingsView.swift in Sources */,
+				33F96271170B6608A030D7C3 /* AppState.swift in Sources */,
+				4BA37C76E0DB8E791BED54D8 /* DS.swift in Sources */,
+				CB31BC5E87FCFD180DABE765 /* DisplayOverlayManager.swift in Sources */,
+				5EFF03E41D09C4C39B44B8A2 /* FlipClockView.swift in Sources */,
+				038D9BB8039DF8421D68CDC8 /* FullscreenDetector.swift in Sources */,
+				04298B074B53CE8DD7500620 /* FullscreenMonitor.swift in Sources */,
+				673776B1E3EA5DF679D6526E /* MediaAppDetector.swift in Sources */,
+				FFE6703AE8E28B6704956666 /* MenuBarView.swift in Sources */,
+				1733B83CED83DC5C3DF96711 /* NSScreen+Extensions.swift in Sources */,
+				12B280FB6CF6455C4CD77B2F /* OverlayWindow.swift in Sources */,
+				21D9DEED680350296B8ED47B /* StatusBarController.swift in Sources */,
+				75B294F30BEF0F01E8760776 /* VeilApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		2CCE76358115611314DB2FA9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		56EBFBFD0F230AC80619CAA5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Veil/Veil.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Veil/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.neocode24.Veil;
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		6D144FA9116B6B678F6C8932 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		89C3E18B3BC266B688F93C01 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Veil/Veil.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Veil/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.neocode24.Veil;
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		03F464A0DF4BCA1ED21A7E71 /* Build configuration list for PBXNativeTarget "Veil" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				56EBFBFD0F230AC80619CAA5 /* Debug */,
+				89C3E18B3BC266B688F93C01 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		45B919B56ACB645EA9A6B199 /* Build configuration list for PBXProject "Veil" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2CCE76358115611314DB2FA9 /* Debug */,
+				6D144FA9116B6B678F6C8932 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C4D6CD16DB62B52C15013FC5 /* Project object */;
+}

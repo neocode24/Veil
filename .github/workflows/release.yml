@@ -1,0 +1,43 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-release:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        run: cd Veil && xcodegen generate
+
+      - name: Build
+        run: |
+          xcodebuild \
+            -project Veil/Veil.xcodeproj \
+            -scheme Veil \
+            -configuration Release \
+            -derivedDataPath build/DerivedData \
+            CODE_SIGN_IDENTITY="-" \
+            CODE_SIGNING_REQUIRED=NO \
+            ENABLE_HARDENED_RUNTIME=NO \
+            build
+
+      - name: Package
+        run: |
+          mkdir -p build/dist
+          APP_PATH=$(find build/DerivedData -name 'Veil.app' -path '*/Release/*' | head -1)
+          cp -R "$APP_PATH" build/dist/Veil.app
+          cd build/dist && zip -r Veil-${{ github.ref_name }}.zip Veil.app
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/dist/Veil-${{ github.ref_name }}.zip
+          generate_release_notes: true
