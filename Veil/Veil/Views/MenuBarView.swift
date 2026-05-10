@@ -26,6 +26,7 @@ struct MenuBarView: View {
         .onChange(of: appState.showClockOnBlanked) { _, _ in onSettingsChanged() }
         .onChange(of: appState.use24HourClock) { _, _ in onSettingsChanged() }
         .onChange(of: appState.showSecondsClock) { _, _ in onSettingsChanged() }
+        .onChange(of: appState.launchAtLogin) { _, _ in onSettingsChanged() }
     }
 
     // MARK: - Header
@@ -118,6 +119,19 @@ struct MenuBarView: View {
 
     private var settingsSection: some View {
         VStack(alignment: .leading, spacing: DS.Spacing.sm) {
+            HStack {
+                Label("Launch at Login", systemImage: "power")
+                    .font(.system(size: DS.Font.caption))
+                Spacer()
+                Toggle("", isOn: Binding(
+                    get: { appState.launchAtLogin },
+                    set: { appState.launchAtLogin = $0 }
+                ))
+                .toggleStyle(.switch)
+                .labelsHidden()
+                .controlSize(.small)
+            }
+
             HStack {
                 Label("Show Clock", systemImage: "clock")
                     .font(.system(size: DS.Font.caption))

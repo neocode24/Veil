@@ -1,4 +1,5 @@
 import AppKit
+import ServiceManagement
 
 @MainActor
 @Observable
@@ -10,6 +11,21 @@ final class AppState {
     var isOverlayActive = false
     var fullscreenAppName: String?
     var blankedDisplayNames: [String] = []
+
+    var launchAtLogin: Bool {
+        get { SMAppService.mainApp.status == .enabled }
+        set {
+            do {
+                if newValue {
+                    try SMAppService.mainApp.register()
+                } else {
+                    try SMAppService.mainApp.unregister()
+                }
+            } catch {
+                // 등록/해제 실패는 UI 상태에만 영향 없음
+            }
+        }
+    }
 
     // Per-monitor settings
     var excludedMonitorNames: Set<String> = []
