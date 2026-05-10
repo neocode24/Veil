@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="../../docs/assets/icon.png" width="128" alt="Veil" />
+<img src="../../docs/assets/image.png" width="560" alt="Veil" />
 
 # Veil
 
