@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Veil — Style C</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: radial-gradient(ellipse at 50% 30%, #13112a 0%, #080710 70%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+    padding: 48px;
+    gap: 0;
+  }
+
+  .header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 56px;
+  }
+
+  .header-icon {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, #a090d0, #6050a0);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 800; color: white;
+    letter-spacing: -0.02em;
+  }
+
+  .header-title {
+    font-size: 18px; font-weight: 700; color: rgba(255,255,255,0.9);
+    letter-spacing: -0.02em;
+  }
+
+  .header-sub {
+    font-size: 12px; color: rgba(255,255,255,0.3);
+    margin-top: 2px; letter-spacing: 0.02em;
+  }
+
+  /* Stage: floor platform */
+  .stage {
+    position: relative;
+    width: 780px;
+    height: 340px;
+    perspective: 1000px;
+  }
+
+  .platform {
+    position: absolute;
+    bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 680px; height: 120px;
+    background: linear-gradient(160deg, #13111e 0%, #0e0c18 100%);
+    border: 1px solid #1e1c2e;
+    border-radius: 16px;
+    box-shadow: 0 -2px 0 #242038, inset 0 1px 0 rgba(255,255,255,0.03);
+  }
+
+  /* Grid lines on platform */
+  .platform::before {
+    content: '';
+    position: absolute; inset: 0;
+    border-radius: 14px;
+    background-image:
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.015) 0 1px, transparent 1px 60px),
+      repeating-linear-gradient(0deg,  rgba(255,255,255,0.015) 0 1px, transparent 1px 60px);
+    background-size: 60px 60px;
+  }
+
+  /* Monitor positioning */
+  .monitor-group {
+    position: absolute;
+    bottom: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .mg-left   { left: 68px; }
+  .mg-center { left: 50%; transform: translateX(-50%); }
+  .mg-right  { right: 68px; }
+
+  /* 3D Monitor */
+  .m3d {
+    position: relative;
+    display: flex; flex-direction: column; align-items: center;
+  }
+
+  /* Screen face */
+  .m3d-face {
+    width: 190px; height: 118px;
+    border-radius: 6px 6px 0 0;
+    position: relative; overflow: hidden;
+    border: 1.5px solid #282440;
+    background: #0b0a14;
+  }
+
+  /* Side face (isometric right) */
+  .m3d-side {
+    position: absolute;
+    right: -10px; top: 3px;
+    width: 10px; height: calc(100% + 12px);
+    background: #0e0c1a;
+    border-top: 1.5px solid #1e1c2e;
+    border-right: 1.5px solid #1a1828;
+    border-bottom: 1.5px solid #1a1828;
+    transform-origin: left center;
+    clip-path: polygon(0 0, 100% 5%, 100% 100%, 0 100%);
+  }
+
+  /* Bottom face */
+  .m3d-bottom {
+    position: absolute;
+    bottom: -6px; left: 4px;
+    width: calc(100% - 4px); height: 6px;
+    background: #0a0812;
+    border: 1.5px solid #1a1828;
+    border-top: none;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 4% 100%);
+  }
+
+  /* Neck / stand */
+  .m3d-neck {
+    width: 30px; height: 20px;
+    background: #0f0e1a;
+    border: 1.5px solid #1e1c2e;
+    border-top: none;
+    position: relative; z-index: 1;
+  }
+
+  .m3d-foot {
+    width: 70px; height: 5px;
+    background: #0f0e1a;
+    border-radius: 2px;
+    border: 1.5px solid #1e1c2e;
+  }
+
+  /* State borders */
+  .m3d.s-active .m3d-face {
+    border-color: #34c759;
+    box-shadow: 0 0 25px rgba(52,199,89,0.12), 0 0 0 1px rgba(52,199,89,0.08);
+  }
+
+  .m3d.s-veiled .m3d-face {
+    border-color: #ff9f0a;
+    box-shadow: 0 0 25px rgba(255,159,10,0.15), 0 0 0 1px rgba(255,159,10,0.08);
+  }
+
+  .m3d.s-excluded .m3d-face {
+    border-color: #1e1c2e;
+    opacity: 0.45;
+    filter: grayscale(0.5);
+  }
+
+  /* ── Screen contents ── */
+
+  /* Active fullscreen */
+  .scr-film {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, #091520 0%, #160b28 55%, #091a10 100%);
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .scr-film-play {
+    width: 0; height: 0;
+    border: 10px solid transparent;
+    border-left: 18px solid rgba(255,255,255,0.2);
+    margin-left: 5px;
+  }
+
+  .scr-film-bar {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 20px;
+    background: rgba(0,0,0,0.65);
+    display: flex; align-items: center; padding: 0 8px; gap: 6px;
+  }
+
+  .fb-play { width: 0; height: 0; border: 4px solid transparent; border-left: 7px solid rgba(255,255,255,0.7); }
+  .fb-bar  { flex: 1; height: 2px; background: rgba(255,255,255,0.15); border-radius: 1px; }
+  .fb-fill { width: 45%; height: 100%; background: #d08040; border-radius: 1px; }
+  .fb-time { font-size: 7px; color: rgba(255,255,255,0.5); font-variant-numeric: tabular-nums; }
+
+  /* Veiled clock */
+  .scr-veil {
+    position: absolute; inset: 0;
+    background: #020108;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+  }
+
+  .sv-clock { display: flex; gap: 3px; align-items: center; }
+
+  .sv-d {
+    width: 18px; height: 25px;
+    background: #0c0a16; border: 1px solid #14112a; border-radius: 2px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; font-weight: 700; color: #c8c0f0;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    position: relative;
+  }
+
+  .sv-d::after {
+    content: ''; position: absolute; top: 50%; left: 0; right: 0;
+    height: 1px; background: rgba(0,0,0,0.45);
+  }
+
+  .sv-sep { font-size: 14px; color: #28204a; font-weight: 700; font-family: 'SF Mono', monospace; margin-bottom: 3px; }
+  .sv-date { font-size: 7px; color: #1c1830; letter-spacing: 0.07em; }
+
+  .sv-badge {
+    position: absolute; top: 5px; right: 5px;
+    background: rgba(180,100,10,0.15); border: 1px solid rgba(180,100,10,0.3);
+    color: #c07020; font-size: 6.5px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 2px 4px; border-radius: 2px;
+  }
+
+  /* Excluded desktop */
+  .scr-normal {
+    position: absolute; inset: 0;
+    background: linear-gradient(160deg, #14122a, #0e0c1c);
+    display: flex; flex-direction: column;
+  }
+
+  .sn-bar {
+    height: 10px; background: rgba(255,255,255,0.04);
+    display: flex; align-items: center; padding: 0 5px; gap: 3px;
+  }
+
+  .sn-dot { width: 3px; height: 3px; border-radius: 50%; background: rgba(255,255,255,0.12); }
+
+  .ex-badge {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    background: rgba(40,38,70,0.8); border: 1px solid rgba(60,58,100,0.4);
+    color: #4848a0; font-size: 7px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 3px 7px; border-radius: 3px; white-space: nowrap;
+  }
+
+  /* Monitor labels on floor */
+  .floor-label {
+    position: absolute;
+    bottom: 22px;
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+  }
+
+  .fl-left   { left: 108px; }
+  .fl-center { left: 50%; transform: translateX(-50%); }
+  .fl-right  { right: 108px; }
+
+  .fl-row { display: flex; align-items: center; gap: 5px; }
+
+  .fl-dot { width: 7px; height: 7px; border-radius: 50%; }
+  .fd-green  { background: #34c759; box-shadow: 0 0 6px rgba(52,199,89,0.7); }
+  .fd-orange { background: #ff9f0a; box-shadow: 0 0 6px rgba(255,159,10,0.7); }
+  .fd-gray   { background: #2a2840; }
+
+  .fl-status { font-size: 11px; font-weight: 700; letter-spacing: 0.05em; }
+  .fs-green  { color: #34c759; }
+  .fs-orange { color: #ff9f0a; }
+  .fs-gray   { color: #383660; }
+
+  .fl-name { font-size: 10px; color: rgba(255,255,255,0.2); letter-spacing: 0.04em; }
+
+  /* Connecting cables from monitors to floor */
+  .cable {
+    position: absolute; bottom: 100px;
+    width: 2px; background: rgba(255,255,255,0.04);
+    border-radius: 1px;
+    height: 30px;
+  }
+
+  .cable-l { left: 157px; }
+  .cable-c { left: 50%; }
+  .cable-r { right: 157px; }
+
+  /* Legend */
+  .legend {
+    margin-top: 44px;
+    display: flex; gap: 24px; align-items: center;
+    padding: 12px 24px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+  }
+
+  .legend-item { display: flex; align-items: center; gap: 7px; }
+  .li-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .li-green  { background: #34c759; box-shadow: 0 0 6px rgba(52,199,89,0.5); }
+  .li-orange { background: #ff9f0a; box-shadow: 0 0 6px rgba(255,159,10,0.5); }
+  .li-gray   { background: #2a2840; }
+  .li-label  { font-size: 11px; color: rgba(255,255,255,0.35); letter-spacing: 0.03em; }
+
+  .legend-div { width: 1px; height: 18px; background: rgba(255,255,255,0.08); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-icon">V</div>
+  <div>
+    <div class="header-title">Veil</div>
+    <div class="header-sub">Fullscreen detected · Veil active on 1 of 3 monitors</div>
+  </div>
+</div>
+
+<div class="stage">
+
+  <!-- Platform / floor -->
+  <div class="platform"></div>
+
+  <!-- Cables -->
+  <div class="cable cable-l"></div>
+  <div class="cable cable-c"></div>
+  <div class="cable cable-r"></div>
+
+  <!-- Floor labels -->
+  <div class="floor-label fl-left">
+    <div class="fl-row">
+      <div class="fl-dot fd-green"></div>
+      <span class="fl-status fs-green">Fullscreen</span>
+    </div>
+    <span class="fl-name">LG 4K · Primary</span>
+  </div>
+
+  <div class="floor-label fl-center">
+    <div class="fl-row">
+      <div class="fl-dot fd-orange"></div>
+      <span class="fl-status fs-orange">Veiled</span>
+    </div>
+    <span class="fl-name">Dell U27 · Extended</span>
+  </div>
+
+  <div class="floor-label fl-right">
+    <div class="fl-row">
+      <div class="fl-dot fd-gray"></div>
+      <span class="fl-status fs-gray">Excluded</span>
+    </div>
+    <span class="fl-name">Built-in · Laptop</span>
+  </div>
+
+  <!-- Monitor Left: Active fullscreen -->
+  <div class="monitor-group mg-left">
+    <div class="m3d s-active">
+      <div class="m3d-face">
+        <div class="scr-film">
+          <div class="scr-film-play"></div>
+          <div class="scr-film-bar">
+            <div class="fb-play"></div>
+            <div class="fb-bar"><div class="fb-fill"></div></div>
+            <span class="fb-time">42:17</span>
+          </div>
+        </div>
+        <div class="m3d-side"></div>
+        <div class="m3d-bottom"></div>
+      </div>
+      <div class="m3d-neck"></div>
+      <div class="m3d-foot"></div>
+    </div>
+  </div>
+
+  <!-- Monitor Center: Veiled -->
+  <div class="monitor-group mg-center">
+    <div class="m3d s-veiled">
+      <div class="m3d-face">
+        <div class="scr-veil">
+          <div class="sv-clock">
+            <div class="sv-d">1</div><div class="sv-d">7</div>
+            <span class="sv-sep">:</span>
+            <div class="sv-d">0</div><div class="sv-d">4</div>
+          </div>
+          <span class="sv-date">Sunday, May 10</span>
+        </div>
+        <div class="sv-badge">Veiled</div>
+        <div class="m3d-side"></div>
+        <div class="m3d-bottom"></div>
+      </div>
+      <div class="m3d-neck"></div>
+      <div class="m3d-foot"></div>
+    </div>
+  </div>
+
+  <!-- Monitor Right: Excluded -->
+  <div class="monitor-group mg-right">
+    <div class="m3d s-excluded">
+      <div class="m3d-face">
+        <div class="scr-normal">
+          <div class="sn-bar"><div class="sn-dot"></div><div class="sn-dot"></div></div>
+          <div class="ex-badge">Excluded</div>
+        </div>
+        <div class="m3d-side"></div>
+        <div class="m3d-bottom"></div>
+      </div>
+      <div class="m3d-neck"></div>
+      <div class="m3d-foot"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Legend -->
+<div class="legend">
+  <div class="legend-item">
+    <div class="li-dot li-green"></div>
+    <span class="li-label">Fullscreen active — no veil</span>
+  </div>
+  <div class="legend-div"></div>
+  <div class="legend-item">
+    <div class="li-dot li-orange"></div>
+    <span class="li-label">Veiled — FlipClock shown</span>
+  </div>
+  <div class="legend-div"></div>
+  <div class="legend-item">
+    <div class="li-dot li-gray"></div>
+    <span class="li-label">Excluded — unchanged</span>
+  </div>
+</div>
+
+</body>
+</html>

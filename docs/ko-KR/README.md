@@ -16,9 +16,7 @@
 
 <br>
 
-<img src="../../docs/screenshots/menubar.png" width="280" alt="Veil 메뉴바" />
-&nbsp;&nbsp;
-<img src="../../docs/screenshots/flipclock.png" width="420" alt="베일 적용 중인 모니터 FlipClock" />
+<img src="../../docs/mockups/preview.png" width="720" alt="Veil — 모니터 3대: 전체화면, 베일 시계, 제외됨" />
 
 </div>
 

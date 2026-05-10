@@ -16,9 +16,7 @@
 
 <br>
 
-<img src="docs/screenshots/menubar.png" width="280" alt="Veil Menu Bar" />
-&nbsp;&nbsp;
-<img src="docs/screenshots/flipclock.png" width="420" alt="Veil FlipClock on veiled monitor" />
+<img src="docs/mockups/preview.png" width="720" alt="Veil — 3 monitors: fullscreen active, veiled with clock, excluded" />
 
 </div>
 

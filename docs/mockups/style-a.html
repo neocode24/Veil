@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Veil — Style A</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0a0912;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+    padding: 48px 32px;
+  }
+
+  .scene-title {
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.35;
+    margin-bottom: 48px;
+  }
+
+  .monitors {
+    display: flex;
+    gap: 28px;
+    align-items: flex-end;
+  }
+
+  /* Monitor shell */
+  .monitor {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    position: relative;
+  }
+
+  .monitor-frame {
+    width: 240px;
+    height: 150px;
+    border-radius: 8px 8px 0 0;
+    border: 2px solid #2a2540;
+    position: relative;
+    overflow: hidden;
+    background: #111;
+  }
+
+  .monitor-stand {
+    width: 48px;
+    height: 14px;
+    background: #1e1a2e;
+    border-radius: 0 0 3px 3px;
+    border: 2px solid #2a2540;
+    border-top: none;
+    margin: 0 auto;
+  }
+
+  .monitor-foot {
+    width: 80px;
+    height: 5px;
+    background: #1e1a2e;
+    border-radius: 3px;
+    border: 1.5px solid #2a2540;
+  }
+
+  /* State: Active fullscreen */
+  .monitor.active .monitor-frame {
+    border-color: #4a4060;
+    box-shadow: 0 0 30px rgba(100, 80, 200, 0.15);
+  }
+
+  .monitor-content {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Fullscreen video content */
+  .video-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #0d1b2a 0%, #1a0d2e 50%, #0d2418 100%);
+  }
+
+  .video-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0; right: 0;
+    height: 22px;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    gap: 6px;
+  }
+
+  .play-btn {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 5px 0 5px 9px;
+    border-color: transparent transparent transparent #ffffff;
+    opacity: 0.9;
+  }
+
+  .progress-track {
+    flex: 1;
+    height: 3px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 2px;
+    position: relative;
+  }
+
+  .progress-fill {
+    width: 38%;
+    height: 100%;
+    background: #c87941;
+    border-radius: 2px;
+  }
+
+  .time-label {
+    font-size: 9px;
+    color: rgba(255,255,255,0.7);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .fullscreen-icon {
+    position: absolute;
+    top: 7px;
+    right: 7px;
+    width: 12px;
+    height: 12px;
+    opacity: 0.5;
+  }
+
+  .fullscreen-icon::before,
+  .fullscreen-icon::after {
+    content: '';
+    position: absolute;
+    border: 1.5px solid white;
+  }
+
+  .fullscreen-icon::before {
+    top: 0; left: 0;
+    width: 5px; height: 5px;
+    border-right: none; border-bottom: none;
+  }
+
+  .fullscreen-icon::after {
+    bottom: 0; right: 0;
+    width: 5px; height: 5px;
+    border-left: none; border-top: none;
+  }
+
+  /* Film grain overlay */
+  .video-grain {
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 150' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  /* Scene hint (film scene) */
+  .scene-hint {
+    position: absolute;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    opacity: 0.45;
+  }
+
+  .scene-hint-circle {
+    width: 28px;
+    height: 28px;
+    border: 1.5px solid rgba(255,255,255,0.6);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .scene-hint-play {
+    width: 0; height: 0;
+    border: 5px solid transparent;
+    border-left: 9px solid rgba(255,255,255,0.8);
+    margin-left: 2px;
+  }
+
+  .scene-hint-label {
+    font-size: 8px;
+    color: white;
+    letter-spacing: 0.1em;
+    font-weight: 500;
+  }
+
+  /* State: Veiled (clock) */
+  .monitor.veiled .monitor-frame {
+    border-color: #2a2038;
+    box-shadow: 0 0 20px rgba(0,0,0,0.6) inset;
+  }
+
+  .veil-overlay {
+    position: absolute;
+    inset: 0;
+    background: #050408;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .flip-clock {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .flip-digit {
+    width: 22px;
+    height: 30px;
+    background: #131020;
+    border-radius: 3px;
+    border: 1px solid #1e1830;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    color: #e8e2ff;
+    font-variant-numeric: tabular-nums;
+    position: relative;
+    letter-spacing: 0;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    line-height: 1;
+  }
+
+  .flip-digit::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0; right: 0;
+    height: 1px;
+    background: rgba(0,0,0,0.5);
+  }
+
+  .flip-sep {
+    font-size: 16px;
+    color: #3a3060;
+    font-weight: 700;
+    margin-bottom: 4px;
+    font-family: 'SF Mono', monospace;
+  }
+
+  .veil-date {
+    font-size: 8px;
+    color: #2e2850;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+  }
+
+  .veil-badge {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    background: rgba(180, 100, 20, 0.2);
+    border: 1px solid rgba(180, 100, 20, 0.4);
+    color: #c87941;
+    font-size: 7px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    padding: 2px 5px;
+    border-radius: 3px;
+    text-transform: uppercase;
+  }
+
+  /* State: Excluded */
+  .monitor.excluded .monitor-frame {
+    border-color: #222030;
+    opacity: 0.55;
+  }
+
+  .desktop-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg, #1c1a28 0%, #14121e 100%);
+  }
+
+  .desktop-icons {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+  }
+
+  .desktop-icon {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .excluded-badge {
+    position: absolute;
+    top: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(60, 60, 80, 0.5);
+    border: 1px solid rgba(100, 100, 130, 0.3);
+    color: #6060a0;
+    font-size: 7px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    padding: 2px 6px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .desktop-menubar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 12px;
+    background: rgba(255,255,255,0.04);
+    display: flex;
+    align-items: center;
+    padding: 0 6px;
+    gap: 4px;
+  }
+
+  .menubar-dot {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.12);
+  }
+
+  /* Labels below monitors */
+  .monitor-labels {
+    margin-top: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .status-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .dot-active   { background: #34c759; box-shadow: 0 0 6px rgba(52, 199, 89, 0.5); }
+  .dot-veiled   { background: #ff9f0a; box-shadow: 0 0 6px rgba(255, 159, 10, 0.5); }
+  .dot-excluded { background: #48485a; }
+
+  .monitor-name {
+    font-size: 11px;
+    color: rgba(255,255,255,0.45);
+    font-weight: 500;
+    letter-spacing: 0.03em;
+  }
+
+  .monitor-state {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-left: 2px;
+  }
+
+  .state-active   { color: #34c759; }
+  .state-veiled   { color: #ff9f0a; }
+  .state-excluded { color: #48485a; }
+
+  /* Arrow between monitors */
+  .arrow-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding-bottom: 32px;
+    opacity: 0.3;
+  }
+
+  .arrow-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, transparent, #6050a0, transparent);
+  }
+
+  /* Detection label */
+  .detection-pill {
+    margin-top: 44px;
+    background: rgba(100, 80, 200, 0.1);
+    border: 1px solid rgba(100, 80, 200, 0.2);
+    border-radius: 20px;
+    padding: 8px 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .detection-icon {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #a090e0;
+    box-shadow: 0 0 8px rgba(160, 144, 224, 0.8);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 8px rgba(160, 144, 224, 0.8); }
+    50%       { opacity: 0.4; box-shadow: 0 0 3px rgba(160, 144, 224, 0.3); }
+  }
+
+  .detection-text {
+    font-size: 11px;
+    color: #8070c0;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+  }
+</style>
+</head>
+<body>
+
+<p class="scene-title">Veil · Smart Monitor Blanking</p>
+
+<div class="monitors">
+
+  <!-- Monitor 1: Active fullscreen -->
+  <div class="monitor active">
+    <div class="monitor-frame">
+      <div class="monitor-content">
+        <div class="video-bg"></div>
+        <div class="video-grain"></div>
+        <div class="scene-hint">
+          <div class="scene-hint-circle">
+            <div class="scene-hint-play"></div>
+          </div>
+          <span class="scene-hint-label">FULLSCREEN</span>
+        </div>
+        <div class="fullscreen-icon"></div>
+        <div class="video-bar">
+          <div class="play-btn"></div>
+          <div class="progress-track">
+            <div class="progress-fill"></div>
+          </div>
+          <span class="time-label">42:17</span>
+        </div>
+      </div>
+    </div>
+    <div class="monitor-stand"></div>
+    <div class="monitor-foot"></div>
+    <div class="monitor-labels">
+      <div class="status-dot dot-active"></div>
+      <span class="monitor-name">LG 4K</span>
+      <span class="monitor-state state-active">· Active</span>
+    </div>
+  </div>
+
+  <!-- Spacer arrow -->
+  <div class="arrow-wrap">
+    <div class="arrow-line"></div>
+  </div>
+
+  <!-- Monitor 2: Veiled -->
+  <div class="monitor veiled">
+    <div class="monitor-frame">
+      <div class="monitor-content">
+        <div class="veil-overlay">
+          <div class="flip-clock">
+            <div class="flip-digit">1</div>
+            <div class="flip-digit">7</div>
+            <span class="flip-sep">:</span>
+            <div class="flip-digit">0</div>
+            <div class="flip-digit">4</div>
+          </div>
+          <span class="veil-date">Sunday, May 10</span>
+        </div>
+        <div class="veil-badge">Veiled</div>
+      </div>
+    </div>
+    <div class="monitor-stand"></div>
+    <div class="monitor-foot"></div>
+    <div class="monitor-labels">
+      <div class="status-dot dot-veiled"></div>
+      <span class="monitor-name">Dell U27</span>
+      <span class="monitor-state state-veiled">· Veiled</span>
+    </div>
+  </div>
+
+  <!-- Spacer arrow -->
+  <div class="arrow-wrap">
+    <div class="arrow-line"></div>
+  </div>
+
+  <!-- Monitor 3: Excluded -->
+  <div class="monitor excluded">
+    <div class="monitor-frame">
+      <div class="monitor-content">
+        <div class="desktop-bg"></div>
+        <div class="desktop-menubar">
+          <div class="menubar-dot"></div>
+          <div class="menubar-dot"></div>
+        </div>
+        <div class="excluded-badge">Excluded</div>
+        <div class="desktop-icons">
+          <div class="desktop-icon"></div>
+          <div class="desktop-icon"></div>
+          <div class="desktop-icon"></div>
+          <div class="desktop-icon"></div>
+        </div>
+      </div>
+    </div>
+    <div class="monitor-stand"></div>
+    <div class="monitor-foot"></div>
+    <div class="monitor-labels">
+      <div class="status-dot dot-excluded"></div>
+      <span class="monitor-name">Built-in</span>
+      <span class="monitor-state state-excluded">· Excluded</span>
+    </div>
+  </div>
+
+</div>
+
+<div class="detection-pill">
+  <div class="detection-icon"></div>
+  <span class="detection-text">Fullscreen detected on LG 4K · Veil applied to Dell U27</span>
+</div>
+
+</body>
+</html>

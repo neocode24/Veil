@@ -16,9 +16,7 @@
 
 <br>
 
-<img src="../../docs/screenshots/menubar.png" width="280" alt="Veil メニューバー" />
-&nbsp;&nbsp;
-<img src="../../docs/screenshots/flipclock.png" width="420" alt="ベール適用中のモニター FlipClock" />
+<img src="../../docs/mockups/preview.png" width="720" alt="Veil — 3モニター: フルスクリーン・ベール時計・除外" />
 
 </div>
 

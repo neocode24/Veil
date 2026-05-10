@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Veil — Style B</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0f0e1a;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+    padding: 48px 40px;
+    gap: 0;
+  }
+
+  /* ---- Top: BEFORE row ---- */
+  .scenario {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .scenario-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 4px;
+  }
+
+  .label-before { background: rgba(80,80,120,0.2); color: #8080b0; border: 1px solid rgba(80,80,120,0.3); }
+  .label-after  { background: rgba(255,159,10,0.1); color: #ff9f0a; border: 1px solid rgba(255,159,10,0.25); }
+
+  .monitors-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+  }
+
+  /* Monitor card */
+  .mon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    position: relative;
+  }
+
+  .mon-screen {
+    width: 180px;
+    height: 112px;
+    border-radius: 6px 6px 0 0;
+    border: 1.5px solid #282438;
+    position: relative;
+    overflow: hidden;
+    background: #0c0b14;
+  }
+
+  .mon-neck {
+    width: 36px; height: 10px;
+    background: #181628;
+    border: 1.5px solid #282438;
+    border-top: none;
+  }
+
+  .mon-base {
+    width: 64px; height: 4px;
+    background: #181628;
+    border-radius: 2px;
+    border: 1.5px solid #282438;
+  }
+
+  /* Status ring around screen */
+  .mon.state-active .mon-screen {
+    border-color: #34c759;
+    box-shadow: 0 0 0 1px rgba(52,199,89,0.1), 0 0 20px rgba(52,199,89,0.08);
+  }
+
+  .mon.state-veiled .mon-screen {
+    border-color: #ff9f0a;
+    box-shadow: 0 0 0 1px rgba(255,159,10,0.12), 0 0 20px rgba(255,159,10,0.08);
+  }
+
+  .mon.state-excluded .mon-screen {
+    border-color: #333050;
+    opacity: 0.5;
+  }
+
+  .mon.state-normal .mon-screen {
+    border-color: #2a2640;
+  }
+
+  /* Screen content */
+  .content-normal {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, #16132a, #0e1420);
+    display: flex; flex-direction: column;
+  }
+
+  .c-menubar {
+    height: 11px;
+    background: rgba(255,255,255,0.04);
+    display: flex; align-items: center;
+    padding: 0 6px; gap: 4px;
+  }
+
+  .c-dot { width: 3px; height: 3px; border-radius: 50%; background: rgba(255,255,255,0.15); }
+
+  .c-body { flex: 1; display: flex; align-items: center; justify-content: center; }
+
+  .c-icon {
+    width: 20px; height: 20px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.07);
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .content-fullscreen {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, #0b1824 0%, #1a0f2e 60%, #0c1e14 100%);
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .fs-play {
+    width: 0; height: 0;
+    border: 9px solid transparent;
+    border-left: 16px solid rgba(255,255,255,0.25);
+    margin-left: 4px;
+  }
+
+  .fs-label {
+    position: absolute;
+    bottom: 6px; right: 6px;
+    font-size: 7px; font-weight: 600;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .content-veiled {
+    position: absolute; inset: 0;
+    background: #030206;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 5px;
+  }
+
+  .v-clock {
+    display: flex; gap: 2px; align-items: center;
+  }
+
+  .v-digit {
+    width: 17px; height: 23px;
+    background: #0e0c18;
+    border: 1px solid #161228;
+    border-radius: 2px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700;
+    color: #ccc0f0;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    position: relative;
+  }
+
+  .v-digit::after {
+    content: '';
+    position: absolute; top: 50%; left: 0; right: 0;
+    height: 1px; background: rgba(0,0,0,0.4);
+  }
+
+  .v-sep {
+    font-size: 13px; color: #2e2650; font-weight: 700;
+    font-family: 'SF Mono', monospace; margin-bottom: 3px;
+  }
+
+  .v-date {
+    font-size: 7px; color: #201c38; letter-spacing: 0.07em; font-weight: 500;
+  }
+
+  .content-excluded {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, #13111e, #0e0d18);
+    display: flex; flex-direction: column;
+  }
+
+  /* Monitor label row */
+  .mon-info {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 4px; margin-top: 12px;
+  }
+
+  .mon-status-row {
+    display: flex; align-items: center; gap: 5px;
+  }
+
+  .s-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+  }
+  .s-green  { background: #34c759; box-shadow: 0 0 5px rgba(52,199,89,0.6); }
+  .s-orange { background: #ff9f0a; box-shadow: 0 0 5px rgba(255,159,10,0.6); }
+  .s-gray   { background: #333; }
+  .s-silver { background: #3a3860; }
+
+  .s-text {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
+  }
+  .t-green  { color: #34c759; }
+  .t-orange { color: #ff9f0a; }
+  .t-gray   { color: #444; }
+  .t-muted  { color: #48486a; }
+
+  .mon-name {
+    font-size: 10px; color: rgba(255,255,255,0.25);
+    letter-spacing: 0.04em;
+  }
+
+  .badge-ex {
+    position: absolute; top: 5px; left: 50%;
+    transform: translateX(-50%);
+    background: rgba(50,48,80,0.7);
+    border: 1px solid rgba(80,78,120,0.3);
+    color: #5050a0;
+    font-size: 6.5px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 2px 5px; border-radius: 2px; white-space: nowrap;
+  }
+
+  /* Divider between BEFORE / AFTER */
+  .divider {
+    display: flex; align-items: center; gap: 20px;
+    margin: 32px 0;
+    width: 100%;
+    max-width: 700px;
+  }
+
+  .div-line { flex: 1; height: 1px; background: rgba(255,255,255,0.06); }
+
+  .div-pill {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(255,159,10,0.08);
+    border: 1px solid rgba(255,159,10,0.2);
+    border-radius: 20px;
+    padding: 7px 16px;
+    white-space: nowrap;
+  }
+
+  .div-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: #ff9f0a;
+    box-shadow: 0 0 8px rgba(255,159,10,0.8);
+    animation: blink 1.8s ease-in-out infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .div-text {
+    font-size: 11px; font-weight: 600;
+    color: #c07808; letter-spacing: 0.05em;
+  }
+</style>
+</head>
+<body>
+
+<!-- BEFORE: Normal state -->
+<div class="scenario">
+  <span class="scenario-label label-before">Before — Normal</span>
+  <div class="monitors-row">
+
+    <!-- Monitor A: normal -->
+    <div class="mon state-normal">
+      <div class="mon-screen">
+        <div class="content-normal">
+          <div class="c-menubar"><div class="c-dot"></div><div class="c-dot"></div></div>
+          <div class="c-body"><div class="c-icon"></div></div>
+        </div>
+      </div>
+      <div class="mon-neck"></div><div class="mon-base"></div>
+      <div class="mon-info">
+        <div class="mon-status-row">
+          <div class="s-dot s-silver"></div>
+          <span class="s-text t-muted">Standby</span>
+        </div>
+        <span class="mon-name">LG 4K</span>
+      </div>
+    </div>
+
+    <!-- Monitor B: normal -->
+    <div class="mon state-normal">
+      <div class="mon-screen">
+        <div class="content-normal">
+          <div class="c-menubar"><div class="c-dot"></div><div class="c-dot"></div></div>
+          <div class="c-body"><div class="c-icon"></div></div>
+        </div>
+      </div>
+      <div class="mon-neck"></div><div class="mon-base"></div>
+      <div class="mon-info">
+        <div class="mon-status-row">
+          <div class="s-dot s-silver"></div>
+          <span class="s-text t-muted">Standby</span>
+        </div>
+        <span class="mon-name">Dell U27</span>
+      </div>
+    </div>
+
+    <!-- Monitor C: excluded -->
+    <div class="mon state-excluded">
+      <div class="mon-screen">
+        <div class="content-excluded">
+          <div class="c-menubar"><div class="c-dot"></div><div class="c-dot"></div></div>
+        </div>
+        <div class="badge-ex">Excluded</div>
+      </div>
+      <div class="mon-neck"></div><div class="mon-base"></div>
+      <div class="mon-info">
+        <div class="mon-status-row">
+          <div class="s-dot s-gray"></div>
+          <span class="s-text t-gray">Excluded</span>
+        </div>
+        <span class="mon-name">Built-in</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Arrow / event -->
+<div class="divider">
+  <div class="div-line"></div>
+  <div class="div-pill">
+    <div class="div-dot"></div>
+    <span class="div-text">Fullscreen detected on LG 4K</span>
+  </div>
+  <div class="div-line"></div>
+</div>
+
+<!-- AFTER: Veil active -->
+<div class="scenario">
+  <span class="scenario-label label-after">After — Veil Active</span>
+  <div class="monitors-row">
+
+    <!-- Monitor A: fullscreen active -->
+    <div class="mon state-active">
+      <div class="mon-screen">
+        <div class="content-fullscreen">
+          <div class="fs-play"></div>
+          <span class="fs-label">Fullscreen</span>
+        </div>
+      </div>
+      <div class="mon-neck"></div><div class="mon-base"></div>
+      <div class="mon-info">
+        <div class="mon-status-row">
+          <div class="s-dot s-green"></div>
+          <span class="s-text t-green">Fullscreen</span>
+        </div>
+        <span class="mon-name">LG 4K</span>
+      </div>
+    </div>
+
+    <!-- Monitor B: veiled -->
+    <div class="mon state-veiled">
+      <div class="mon-screen">
+        <div class="content-veiled">
+          <div class="v-clock">
+            <div class="v-digit">1</div><div class="v-digit">7</div>
+            <span class="v-sep">:</span>
+            <div class="v-digit">0</div><div class="v-digit">4</div>
+          </div>
+          <span class="v-date">Sunday, May 10</span>
+        </div>
+      </div>
+      <div class="mon-neck"></div><div class="mon-base"></div>
+      <div class="mon-info">
+        <div class="mon-status-row">
+          <div class="s-dot s-orange"></div>
+          <span class="s-text t-orange">Veiled</span>
+        </div>
+        <span class="mon-name">Dell U27</span>
+      </div>
+    </div>
+
+    <!-- Monitor C: excluded (unchanged) -->
+    <div class="mon state-excluded">
+      <div class="mon-screen">
+        <div class="content-excluded">
+          <div class="c-menubar"><div class="c-dot"></div><div class="c-dot"></div></div>
+        </div>
+        <div class="badge-ex">Excluded</div>
+      </div>
+      <div class="mon-neck"></div><div class="mon-base"></div>
+      <div class="mon-info">
+        <div class="mon-status-row">
+          <div class="s-dot s-gray"></div>
+          <span class="s-text t-gray">Excluded</span>
+        </div>
+        <span class="mon-name">Built-in</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
