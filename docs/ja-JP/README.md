@@ -16,7 +16,9 @@
 
 <br>
 
-<img src="../../docs/mockups/preview.png" width="720" alt="Veil — 3モニター: フルスクリーン・ベール時計・除外" />
+<img src="../../docs/mockups/mockup-b.png" width="720" alt="Veil — Before / After: フルスクリーン検出、ベール適用" />
+
+<img src="../../docs/mockups/mockup-c.png" width="720" alt="Veil — 3モニター: フルスクリーン・ベール時計・除外" />
 
 </div>
 

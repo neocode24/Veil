@@ -16,7 +16,9 @@
 
 <br>
 
-<img src="../../docs/mockups/preview.png" width="720" alt="Veil — 모니터 3대: 전체화면, 베일 시계, 제외됨" />
+<img src="../../docs/mockups/mockup-b.png" width="720" alt="Veil — Before / After: 전체화면 감지, 베일 적용" />
+
+<img src="../../docs/mockups/mockup-c.png" width="720" alt="Veil — 모니터 3대: 전체화면, 베일 시계, 제외됨" />
 
 </div>
 

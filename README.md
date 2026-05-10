@@ -16,7 +16,9 @@
 
 <br>
 
-<img src="docs/mockups/preview.png" width="720" alt="Veil — 3 monitors: fullscreen active, veiled with clock, excluded" />
+<img src="docs/mockups/mockup-b.png" width="720" alt="Veil — Before / After: fullscreen detected, veil applied" />
+
+<img src="docs/mockups/mockup-c.png" width="720" alt="Veil — 3 monitors: fullscreen active, veiled with clock, excluded" />
 
 </div>
 
