@@ -14,7 +14,11 @@
 
 **言語** · [English](../../README.md) · [한국어](../ko-KR/README.md) · 日本語
 
-<img src="../../docs/screenshots/menubar.png" width="300" alt="Veil メニューバー" />
+<br>
+
+<img src="../../docs/screenshots/menubar.png" width="280" alt="Veil メニューバー" />
+&nbsp;&nbsp;
+<img src="../../docs/screenshots/flipclock.png" width="420" alt="ベール適用中のモニター FlipClock" />
 
 </div>
 
