@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#18142e"/>
+      <stop offset="100%" stop-color="#0c0a1c"/>
+    </linearGradient>
+    <linearGradient id="veilLeft" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ccc5e8"/>
+      <stop offset="60%" stop-color="#a097cc"/>
+      <stop offset="100%" stop-color="#7068a8"/>
+    </linearGradient>
+    <linearGradient id="veilRight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ccc5e8"/>
+      <stop offset="60%" stop-color="#a097cc"/>
+      <stop offset="100%" stop-color="#7068a8"/>
+    </linearGradient>
+    <linearGradient id="rodGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#d4c9f0"/>
+      <stop offset="100%" stop-color="#8878c0"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <clipPath id="roundedBg">
+      <rect width="1024" height="1024" rx="230" ry="230"/>
+    </clipPath>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1024" height="1024" rx="230" fill="url(#bg)"/>
+
+  <!-- Subtle screen glow in background (left & right) -->
+  <ellipse cx="280" cy="560" rx="160" ry="120" fill="#3a2f60" opacity="0.18"/>
+  <ellipse cx="744" cy="560" rx="160" ry="120" fill="#3a2f60" opacity="0.18"/>
+
+  <!-- Left curtain panel -->
+  <path d="
+    M 148,220
+    C 148,220 310,240 370,290
+    L 370,820
+    C 370,820 240,840 148,830
+    Z"
+    fill="url(#veilLeft)" opacity="0.92"/>
+
+  <!-- Left panel vertical fabric folds -->
+  <line x1="190" y1="228" x2="185" y2="826" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.18"/>
+  <line x1="230" y1="232" x2="225" y2="826" stroke="#ffffff" stroke-width="1.0" stroke-opacity="0.12"/>
+  <line x1="270" y1="240" x2="268" y2="826" stroke="#ffffff" stroke-width="1.0" stroke-opacity="0.10"/>
+  <line x1="320" y1="252" x2="320" y2="820" stroke="#ffffff" stroke-width="0.8" stroke-opacity="0.08"/>
+
+  <!-- Left panel edge highlight -->
+  <path d="M 370,290 L 370,820" stroke="#d8d0f0" stroke-width="2.5" stroke-opacity="0.5" fill="none"/>
+
+  <!-- Right curtain panel -->
+  <path d="
+    M 876,220
+    C 876,220 714,240 654,290
+    L 654,820
+    C 654,820 784,840 876,830
+    Z"
+    fill="url(#veilRight)" opacity="0.92"/>
+
+  <!-- Right panel vertical fabric folds -->
+  <line x1="834" y1="228" x2="839" y2="826" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.18"/>
+  <line x1="794" y1="232" x2="799" y2="826" stroke="#ffffff" stroke-width="1.0" stroke-opacity="0.12"/>
+  <line x1="754" y1="240" x2="756" y2="826" stroke="#ffffff" stroke-width="1.0" stroke-opacity="0.10"/>
+  <line x1="704" y1="252" x2="704" y2="820" stroke="#ffffff" stroke-width="0.8" stroke-opacity="0.08"/>
+
+  <!-- Right panel edge highlight -->
+  <path d="M 654,290 L 654,820" stroke="#d8d0f0" stroke-width="2.5" stroke-opacity="0.5" fill="none"/>
+
+  <!-- V-shaped parting edge between curtains (the key visual) -->
+  <path d="M 370,290 Q 430,540 512,660 Q 594,540 654,290"
+        stroke="#e8e0ff" stroke-width="4" fill="none" opacity="0.85" filter="url(#softGlow)"/>
+
+  <!-- Inner V glow layer -->
+  <path d="M 370,290 Q 430,540 512,660 Q 594,540 654,290"
+        stroke="#ffffff" stroke-width="10" fill="none" opacity="0.12" filter="url(#glow)"/>
+
+  <!-- Curtain rod (top bar) -->
+  <rect x="112" y="196" width="800" height="28" rx="14" fill="url(#rodGrad)" opacity="0.75"/>
+
+  <!-- Rod rings (left, center, right) -->
+  <circle cx="180" cy="210" r="14" fill="none" stroke="#d4c9f0" stroke-width="3" opacity="0.7"/>
+  <circle cx="512" cy="210" r="14" fill="none" stroke="#d4c9f0" stroke-width="3" opacity="0.7"/>
+  <circle cx="844" cy="210" r="14" fill="none" stroke="#d4c9f0" stroke-width="3" opacity="0.7"/>
+
+  <!-- Center ornament at V bottom -->
+  <circle cx="512" cy="666" r="18" fill="#c8b8f0" opacity="0.6" filter="url(#softGlow)"/>
+  <circle cx="512" cy="666" r="10" fill="#ffffff" opacity="0.4"/>
+</svg>

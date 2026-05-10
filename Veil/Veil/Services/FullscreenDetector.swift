@@ -31,7 +31,8 @@ struct FullscreenDetector {
         let screens = NSScreen.screens
         for app in NSWorkspace.shared.runningApplications {
             guard let name = app.localizedName,
-                  appDetector.isVideoPlayer(name) else { continue }
+                  app.activationPolicy == .regular,
+                  appDetector.shouldDetect(name) else { continue }
 
             NSLog("[Veil] AX checking: \(name) pid=\(app.processIdentifier)")
             let axApp = AXUIElementCreateApplication(app.processIdentifier)
@@ -57,11 +58,18 @@ struct FullscreenDetector {
             let isFS = fsRef as? Bool ?? false
             NSLog("[Veil] AX window: fsErr=\(fsErr.rawValue) AXFullScreen=\(isFS)")
 
-            if fsErr == .success, isFS {
-                return screenForAXWindow(window, screens: screens, sizeCheck: false)
+            if fsErr == .success {
+                if isFS {
+                    return screenForAXWindow(window, screens: screens, sizeCheck: false)
+                }
+                continue
             }
 
-            // Fallback: non-native fullscreen (e.g. VLC)
+            // fsErr != .success: 속성 없음 (-25201) vs 접근 불가 (-25212) 구분
+            // -25212 = 창 접근 자체가 안 됨 → size-match도 신뢰 불가 → skip
+            if fsErr.rawValue == -25212 { continue }
+
+            // -25201 등 속성 없음: non-native fullscreen 앱(VLC 등) size-match fallback
             if let screen = screenForAXWindow(window, screens: screens, sizeCheck: true) {
                 NSLog("[Veil] AX size-match: app=\(appName) screen=\(screen.localizedName)")
                 return screen
@@ -105,11 +113,16 @@ struct FullscreenDetector {
         let ourPID = ProcessInfo.processInfo.processIdentifier
         let screens = NSScreen.screens
 
+        let regularAppNames = Set(NSWorkspace.shared.runningApplications
+            .filter { $0.activationPolicy == .regular }
+            .compactMap { $0.localizedName })
+
         for info in windowList {
             guard let ownerPID = info[kCGWindowOwnerPID as String] as? Int32,
                   Int32(ourPID) != ownerPID,
                   let ownerName = info[kCGWindowOwnerName as String] as? String,
-                  appDetector.isVideoPlayer(ownerName) else { continue }
+                  regularAppNames.contains(ownerName),
+                  appDetector.shouldDetect(ownerName) else { continue }
 
             let layer = info[kCGWindowLayer as String] as? Int ?? -999
             let onscreen = info[kCGWindowIsOnscreen as String] as? Bool ?? false

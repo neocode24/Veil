@@ -32,8 +32,10 @@ struct MenuBarView: View {
 
     private var headerSection: some View {
         HStack {
-            Image(systemName: "eye.slash.fill")
-                .font(.system(size: 18))
+            Image("VeilMenuBarIcon")
+                .resizable()
+                .renderingMode(.template)
+                .frame(width: 18, height: 18)
                 .foregroundStyle(.secondary)
             Text("Veil")
                 .font(.system(size: DS.Font.title, weight: .semibold))
@@ -156,8 +158,8 @@ struct MenuBarView: View {
     // MARK: - App List (collapsible)
 
     private var appListSection: some View {
-        DisclosureGroup("Detected Apps (\(appState.mediaAppDetector.activeApps.count)/\(appState.mediaAppDetector.allApps.count))") {
-            AppListSettingsView(appState: appState)
+        DisclosureGroup("Exclude Apps (\(appState.mediaAppDetector.excludedApps.count))") {
+            ExcludedAppsView(appState: appState, onAppsChanged: onSettingsChanged)
         }
         .font(.system(size: DS.Font.caption))
     }

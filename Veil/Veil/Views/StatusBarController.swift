@@ -10,7 +10,10 @@ final class StatusBarController {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
 
         if let button = statusItem.button {
-            button.image = NSImage(systemSymbolName: "eye.slash", accessibilityDescription: "Veil")
+            if let icon = NSImage(named: "VeilMenuBarIcon") {
+                icon.isTemplate = true
+                button.image = icon
+            }
             button.action = #selector(togglePanel)
             button.target = self
         }

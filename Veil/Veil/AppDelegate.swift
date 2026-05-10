@@ -38,6 +38,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             return
         }
 
+        fullscreenMonitor.check()
+
         if let activeScreen = fullscreenMonitor.currentFullscreenScreen {
             showOverlays(excluding: activeScreen)
         } else if appState.isOverlayActive {
