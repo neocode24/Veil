@@ -43,3 +43,57 @@ jobs:
         with:
           files: build/dist/Veil-${{ github.ref_name }}.zip
           generate_release_notes: true
+
+      - name: Update Homebrew Tap
+        env:
+          HOMEBREW_DEPLOY_KEY: ${{ secrets.HOMEBREW_DEPLOY_KEY }}
+        run: |
+          if [ -z "$HOMEBREW_DEPLOY_KEY" ]; then
+            echo "::warning::HOMEBREW_DEPLOY_KEY secret not set. Skipping tap update."
+            exit 0
+          fi
+
+          mkdir -p ~/.ssh
+          echo "$HOMEBREW_DEPLOY_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan github.com >> ~/.ssh/known_hosts 2>/dev/null
+
+          VERSION="${{ github.ref_name }}"
+          VERSION_NO_V="${VERSION#v}"
+          ZIP_FILE="Veil-${VERSION}.zip"
+
+          curl -sL "https://github.com/neocode24/Veil/releases/download/${VERSION}/${ZIP_FILE}" -o "${ZIP_FILE}"
+          SHA256=$(shasum -a 256 "${ZIP_FILE}" | cut -d ' ' -f 1)
+
+          GIT_SSH_COMMAND="ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes" \
+            git clone git@github.com:neocode24/homebrew-tap.git homebrew-tap
+          cd homebrew-tap
+
+          cat > "Casks/veil.rb" << CASK_EOF
+          cask "veil" do
+            version "${VERSION_NO_V}"
+            sha256 "${SHA256}"
+
+            url "https://github.com/neocode24/Veil/releases/download/v#{version}/Veil-v#{version}.zip"
+            name "Veil"
+            desc "macOS menu bar app that softly blanks other monitors when fullscreen video is detected"
+            homepage "https://github.com/neocode24/Veil"
+
+            depends_on macos: ">= :sonoma"
+
+            app "Veil.app"
+
+            zap trash: [
+              "~/Library/Preferences/com.neocode24.Veil.plist",
+              "~/Library/Caches/com.neocode24.Veil",
+            ]
+          end
+          CASK_EOF
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Casks/veil.rb
+          git diff --cached --quiet || git commit -m "chore: update veil to ${VERSION_NO_V}"
+          GIT_SSH_COMMAND="ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes" git push
+
+          rm -f ~/.ssh/deploy_key

@@ -5,9 +5,11 @@ struct MenuBarView: View {
     let onRestore: () -> Void
     let onSettingsChanged: () -> Void
     let onQuit: () -> Void
+    @State private var showExcludeApps = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: DS.Spacing.md) {
+            dragHandle
             headerSection
             Divider()
             statusSection
@@ -21,12 +23,25 @@ struct MenuBarView: View {
             controlSection
         }
         .padding(DS.Spacing.lg)
+        .padding(.top, DS.Spacing.xs)
         .frame(width: 300)
         .tint(.green)
         .onChange(of: appState.showClockOnBlanked) { _, _ in onSettingsChanged() }
         .onChange(of: appState.use24HourClock) { _, _ in onSettingsChanged() }
         .onChange(of: appState.showSecondsClock) { _, _ in onSettingsChanged() }
         .onChange(of: appState.launchAtLogin) { _, _ in onSettingsChanged() }
+    }
+
+    // MARK: - Drag Handle
+
+    private var dragHandle: some View {
+        HStack {
+            Spacer()
+            RoundedRectangle(cornerRadius: 2.5)
+                .fill(Color.primary.opacity(0.2))
+                .frame(width: 36, height: 5)
+            Spacer()
+        }
     }
 
     // MARK: - Header
@@ -172,10 +187,27 @@ struct MenuBarView: View {
     // MARK: - App List (collapsible)
 
     private var appListSection: some View {
-        DisclosureGroup("Exclude Apps (\(appState.mediaAppDetector.excludedApps.count))") {
-            ExcludedAppsView(appState: appState, onAppsChanged: onSettingsChanged)
+        VStack(alignment: .leading, spacing: DS.Spacing.sm) {
+            Button(action: { withAnimation(.easeInOut(duration: 0.2)) { showExcludeApps.toggle() } }) {
+                HStack(spacing: DS.Spacing.sm) {
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 8, weight: .semibold))
+                        .foregroundStyle(.secondary)
+                        .rotationEffect(.degrees(showExcludeApps ? 90 : 0))
+                    Text("Exclude Apps (\(appState.mediaAppDetector.excludedApps.count))")
+                        .font(.system(size: DS.Font.caption))
+                        .foregroundStyle(.primary)
+                    Spacer()
+                }
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+
+            if showExcludeApps {
+                ExcludedAppsView(appState: appState, onAppsChanged: onSettingsChanged)
+                    .transition(.opacity.combined(with: .move(edge: .top)))
+            }
         }
-        .font(.system(size: DS.Font.caption))
     }
 
     // MARK: - Controls

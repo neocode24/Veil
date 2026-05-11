@@ -5,6 +5,8 @@ import SwiftUI
 final class StatusBarController {
     private var statusItem: NSStatusItem!
     private var panel: MenuPanel!
+    private var hostingView: NSHostingView<MenuBarView>!
+    nonisolated(unsafe) private var eventMonitor: Any?
 
     func setup(appState: AppState, delegate: AppDelegate) {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
@@ -27,11 +29,17 @@ final class StatusBarController {
         panel.isFloatingPanel = true
         panel.level = .floating
         panel.isMovableByWindowBackground = true
-        panel.backgroundColor = NSColor(white: 0.12, alpha: 0.95)
+        panel.backgroundColor = .clear
+        panel.isOpaque = false
         panel.hasShadow = true
-        panel.contentView?.wantsLayer = true
-        panel.contentView?.layer?.cornerRadius = 12
-        panel.contentView?.layer?.masksToBounds = true
+
+        let visualEffectView = NSVisualEffectView()
+        visualEffectView.material = .popover
+        visualEffectView.blendingMode = .behindWindow
+        visualEffectView.state = .active
+        visualEffectView.wantsLayer = true
+        visualEffectView.layer?.cornerRadius = 12
+        visualEffectView.layer?.masksToBounds = true
 
         let menuBarView = MenuBarView(
             appState: appState,
@@ -47,23 +55,41 @@ final class StatusBarController {
                 NSApplication.shared.terminate(nil)
             }
         )
-        panel.contentView = NSHostingView(rootView: menuBarView)
+
+        let hostingView = NSHostingView(rootView: menuBarView)
+        hostingView.autoresizingMask = [.width, .height]
+        visualEffectView.addSubview(hostingView)
+
+        panel.contentView = visualEffectView
         self.panel = panel
+        self.hostingView = hostingView
+
+        eventMonitor = NSEvent.addGlobalMonitorForEvents(matching: .leftMouseDown) { [weak self] _ in
+            guard let self, let panel = self.panel, panel.isVisible else { return }
+            if !panel.frame.contains(NSEvent.mouseLocation) {
+                panel.orderOut(nil)
+            }
+        }
+    }
+
+    deinit {
+        if let monitor = eventMonitor {
+            NSEvent.removeMonitor(monitor)
+        }
     }
 
     @objc private func togglePanel() {
         if panel.isVisible {
             panel.orderOut(nil)
         } else {
-            guard let button = statusItem.button,
-                  let screen = button.window?.screen else { return }
+            guard let button = statusItem.button else { return }
 
             let buttonFrame = button.window?.convertToScreen(
                 button.convert(button.bounds, to: nil)
             ) ?? .zero
 
             let panelWidth: CGFloat = 280 + 32
-            let panelHeight: CGFloat = panel.contentView?.fittingSize.height ?? 400
+            let panelHeight: CGFloat = hostingView.fittingSize.height
 
             let x = buttonFrame.midX - panelWidth / 2
             let y = buttonFrame.origin.y - panelHeight - 8
@@ -77,7 +103,6 @@ final class StatusBarController {
     }
 }
 
-// NSPanel subclass that allows becoming key window for text input
 private final class MenuPanel: NSPanel {
     override var canBecomeKey: Bool { true }
 }
