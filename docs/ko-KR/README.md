@@ -38,7 +38,7 @@
 
 ```bash
 brew tap neocode24/tap
-brew install --cask veil
+brew install --cask --no-quarantine veil
 ```
 
 ### 수동 설치
