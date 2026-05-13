@@ -4,7 +4,9 @@ import SwiftUI
 struct ExcludedAppsView: View {
     @Bindable var appState: AppState
     var onAppsChanged: (() -> Void)?
+    var onLayout: (() -> Void)?
     @State private var showPicker = false
+    @State private var availableApps: [String] = []
 
     var body: some View {
         VStack(alignment: .leading, spacing: DS.Spacing.md) {
@@ -12,7 +14,9 @@ struct ExcludedAppsView: View {
                 Text("Exclude Apps")
                     .font(.system(size: DS.Font.body, weight: .semibold))
                 Spacer()
-                Button(action: { withAnimation { showPicker.toggle() } }) {
+                Button(action: {
+                    withAnimation { showPicker.toggle() }
+                }) {
                     Image(systemName: showPicker ? "xmark.circle.fill" : "plus.circle.fill")
                         .font(.system(size: 14))
                         .foregroundStyle(showPicker ? Color.secondary : Color.blue)
@@ -36,23 +40,42 @@ struct ExcludedAppsView: View {
             }
         }
         .padding(DS.Spacing.md)
+        .onChange(of: showPicker) { _, newValue in
+            if newValue {
+                refreshAvailableApps()
+            } else {
+                availableApps = []
+            }
+            onLayout?()
+        }
+    }
+
+    private func refreshAvailableApps() {
+        let excluded = appState.mediaAppDetector.excludedApps
+        availableApps = NSWorkspace.shared.runningApplications
+            .filter { app in
+                app.activationPolicy == .regular
+                && app.localizedName != nil
+                && app.processIdentifier != ProcessInfo.processInfo.processIdentifier
+            }
+            .compactMap { $0.localizedName }
+            .filter { !excluded.contains($0) }
+            .sorted()
     }
 
     private var runningAppsPicker: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 2) {
-                let apps = appState.mediaAppDetector.runningApps.filter {
-                    !appState.mediaAppDetector.isExcluded($0)
-                }
-                if apps.isEmpty {
+                if availableApps.isEmpty {
                     Text("No running apps to add")
                         .font(.system(size: DS.Font.tiny))
                         .foregroundStyle(.tertiary)
                         .padding(.vertical, DS.Spacing.sm)
                 }
-                ForEach(apps, id: \.self) { appName in
+                ForEach(availableApps, id: \.self) { appName in
                     AddAppRow(appName: appName) {
                         appState.mediaAppDetector.toggleExclusion(appName)
+                        availableApps.removeAll { $0 == appName }
                         onAppsChanged?()
                     }
                 }

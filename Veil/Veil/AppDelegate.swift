@@ -20,10 +20,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             fullscreenMonitor.start()
         }
 
-        NSWorkspace.shared.notificationCenter.addObserver(
+        NotificationCenter.default.addObserver(
             self,
             selector: #selector(screenParametersChanged),
             name: NSApplication.didChangeScreenParametersNotification,
+            object: nil
+        )
+
+        NSWorkspace.shared.notificationCenter.addObserver(
+            self,
+            selector: #selector(systemDidWake),
+            name: NSWorkspace.didWakeNotification,
             object: nil
         )
 
@@ -31,6 +38,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func refreshOverlays() {
+        defer { statusBarController.refreshPanelSize() }
+
         guard appState.isEnabled else {
             overlayManager.removeAll()
             appState.isOverlayActive = false
@@ -72,8 +81,22 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         if appState.isOverlayActive {
             overlayManager.removeAll()
             appState.isOverlayActive = false
+            appState.blankedDisplayNames = []
         }
         fullscreenMonitor.check()
+    }
+
+    @objc private func systemDidWake(_ notification: Notification) {
+        // 슬립 해제 직후 디스플레이 구성이 확정되기까지 짧은 지연 필요
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(1500))
+            appState.updateScreenInfo()
+            overlayManager.removeAll()
+            appState.isOverlayActive = false
+            appState.blankedDisplayNames = []
+            fullscreenMonitor.check()
+            NSLog("[Veil] wake from sleep — screens=\(NSScreen.screens.count)")
+        }
     }
 }
 

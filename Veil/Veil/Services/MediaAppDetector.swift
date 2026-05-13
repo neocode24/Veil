@@ -12,8 +12,10 @@ final class MediaAppDetector {
     private let defaults = UserDefaults.standard
     private let excludedAppsKey = "veil.excludedApps"
 
-    var runningApps: [String] {
-        NSWorkspace.shared.runningApplications
+    private(set) var runningApps: [String] = []
+
+    func refreshRunningApps() {
+        runningApps = NSWorkspace.shared.runningApplications
             .filter { app in
                 app.activationPolicy == .regular
                 && app.localizedName != nil

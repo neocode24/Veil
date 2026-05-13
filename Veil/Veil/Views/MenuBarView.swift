@@ -26,10 +26,12 @@ struct MenuBarView: View {
         .padding(.top, DS.Spacing.xs)
         .frame(width: 300)
         .tint(.green)
+        .onChange(of: appState.isEnabled) { _, _ in onSettingsChanged() }
         .onChange(of: appState.showClockOnBlanked) { _, _ in onSettingsChanged() }
         .onChange(of: appState.use24HourClock) { _, _ in onSettingsChanged() }
         .onChange(of: appState.showSecondsClock) { _, _ in onSettingsChanged() }
         .onChange(of: appState.launchAtLogin) { _, _ in onSettingsChanged() }
+        .onChange(of: showExcludeApps) { _, _ in onSettingsChanged() }
     }
 
     // MARK: - Drag Handle
@@ -97,7 +99,7 @@ struct MenuBarView: View {
                 .font(.system(size: DS.Font.tiny))
                 .foregroundStyle(.tertiary)
 
-            ForEach(NSScreen.screens, id: \.displayID) { screen in
+            ForEach(appState.screens, id: \.displayID) { screen in
                 let name = screen.localizedName
                 let isBlanked = appState.blankedDisplayNames.contains(name)
                 let isExcluded = appState.isMonitorExcluded(name)
@@ -204,7 +206,7 @@ struct MenuBarView: View {
             .buttonStyle(.plain)
 
             if showExcludeApps {
-                ExcludedAppsView(appState: appState, onAppsChanged: onSettingsChanged)
+                ExcludedAppsView(appState: appState, onAppsChanged: onSettingsChanged, onLayout: onSettingsChanged)
                     .transition(.opacity.combined(with: .move(edge: .top)))
             }
         }
@@ -217,6 +219,10 @@ struct MenuBarView: View {
             Button("Restore All") { onRestore() }
                 .buttonStyle(.bordered)
                 .controlSize(.small)
+            Spacer()
+            Text(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "")
+                .font(.system(size: DS.Font.tiny))
+                .foregroundStyle(.tertiary)
             Spacer()
             Button("Quit") { onQuit() }
                 .buttonStyle(.bordered)

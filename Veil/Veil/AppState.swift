@@ -35,12 +35,12 @@ final class AppState {
     private let defaults = UserDefaults.standard
     private let excludedMonitorsKey = "veil.excludedMonitors"
 
-    var screenCount: Int {
-        NSScreen.screens.count
-    }
+    private(set) var screens: [NSScreen] = NSScreen.screens
+
+    var screenCount: Int { screens.count }
 
     func updateScreenInfo() {
-        _ = NSScreen.screens
+        screens = NSScreen.screens
     }
 
     func isMonitorExcluded(_ name: String) -> Bool {

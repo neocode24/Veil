@@ -78,6 +78,23 @@ final class StatusBarController {
         }
     }
 
+    func refreshPanelSize() {
+        guard panel.isVisible else { return }
+        DispatchQueue.main.async { [weak self] in
+            guard let self, self.panel.isVisible else { return }
+            self.hostingView.layoutSubtreeIfNeeded()
+            let panelWidth: CGFloat = 280 + 32
+            let panelHeight = self.hostingView.fittingSize.height
+            // 패널 상단 위치(maxY)를 유지하면서 높이만 조정
+            let currentMaxY = self.panel.frame.maxY
+            let newY = currentMaxY - panelHeight
+            self.panel.setFrame(
+                NSRect(x: self.panel.frame.origin.x, y: max(0, newY), width: panelWidth, height: panelHeight),
+                display: true
+            )
+        }
+    }
+
     @objc private func togglePanel() {
         if panel.isVisible {
             panel.orderOut(nil)
