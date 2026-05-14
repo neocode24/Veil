@@ -124,7 +124,17 @@ gh run view RUN_ID --repo neocode24/veil --json status,conclusion,jobs
 - 10분 초과 시: 폴링 중단하고 run URL을 최종 보고에 포함.
 - failure 시: 실패한 job 이름과 로그 URL을 최종 보고에 포함.
 
-### 9. brew-tap 확인
+### 9. GitHub Release 노트 업데이트
+
+Actions 성공 후, Step 5에서 생성한 릴리스 노트를 GitHub Release에 반영한다:
+
+```bash
+gh release edit vX.Y.Z --repo neocode24/veil --notes "<Step 5에서 생성한 전체 내용>"
+```
+
+Actions가 Release를 자동 생성하지만 내용이 비어 있으므로 이 단계가 필수다.
+
+### 10. brew-tap 확인
 
 Actions 성공 후 실행:
 
@@ -136,7 +146,7 @@ gh api repos/neocode24/homebrew-tap/contents/Casks/veil.rb \
   --jq '.content' | base64 -d | grep -E 'version|sha256|url'
 ```
 
-### 10. 최종 보고
+### 11. 최종 보고
 
 모든 단계 완료 후 한 번에 출력:
 
@@ -163,3 +173,4 @@ brew upgrade --cask --no-quarantine veil 로 업데이트 가능
 | Actions 10분 초과 | 중단 없이 run URL만 보고 |
 | Actions 실패 | 실패 job + 로그 URL 보고 |
 | brew-tap 미반영 | 경고만, Actions 로그 URL 포함 |
+| Release 노트 업데이트 실패 | 경고만, 수동 명령어 안내 |
