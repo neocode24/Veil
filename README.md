@@ -42,6 +42,11 @@ brew tap neocode24/tap
 brew install --cask --no-quarantine veil
 ```
 
+> **Updating:** `--no-quarantine` is required on upgrade too, as Veil is not notarized by Apple.
+> ```bash
+> brew upgrade --cask --no-quarantine veil
+> ```
+
 ### Manual
 
 Download the latest `.zip` from [Releases](https://github.com/neocode24/veil/releases) and drag `Veil.app` to `/Applications`.

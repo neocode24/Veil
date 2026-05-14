@@ -42,6 +42,11 @@ brew tap neocode24/tap
 brew install --cask --no-quarantine veil
 ```
 
+> **업데이트:** Veil은 Apple 공증이 없으므로 업그레이드 시에도 `--no-quarantine`이 필요합니다.
+> ```bash
+> brew upgrade --cask --no-quarantine veil
+> ```
+
 ### 수동 설치
 
 [Releases](https://github.com/neocode24/veil/releases)에서 최신 `.zip`을 다운로드 후 `Veil.app`을 `/Applications`으로 드래그하세요.

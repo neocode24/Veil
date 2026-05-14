@@ -79,7 +79,7 @@ conventional commits 기준으로 분류. 섹션에 해당 커밋이 없으면 �
 
 **설치**
 \`\`\`bash
-brew upgrade --cask veil
+brew upgrade --cask --no-quarantine veil
 # 또는 신규 설치
 brew tap neocode24/tap
 brew install --cask --no-quarantine veil
@@ -148,7 +148,7 @@ GitHub Release : https://github.com/neocode24/veil/releases/tag/v0.4.1
 Actions        : success (소요: 3분 12초)
 brew-tap       : Casks/veil.rb 업데이트 확인 (커밋 abc1234, 버전 0.4.1)
 
-brew upgrade --cask veil 로 업데이트 가능
+brew upgrade --cask --no-quarantine veil 로 업데이트 가능
 ```
 
 ---
