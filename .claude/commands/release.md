@@ -1,103 +1,79 @@
 # Veil Release
 
-Veil macOS 앱의 전체 릴리스 워크플로우를 실행한다.
+Veil macOS 앱의 전체 릴리스를 자동으로 실행하고 완료 후 결과를 보고한다.
 
 ## 사용법
 
 ```
-/release [version]
-/release 0.4.1
+/release          # 현재 버전 확인 후 새 버전 한 번만 묻고 자동 진행
+/release 0.4.1    # 버전 지정 시 바로 자동 진행
 ```
 
-버전을 인자로 생략하면 현재 버전을 보여주고 새 버전을 물어본다.
+**중요: 버전 결정 이후 모든 단계는 중간 확인 없이 자동으로 실행된다. 완료 후 최종 보고만 출력한다.**
 
 ---
 
-## Step 1: 현재 상태 확인
+## 실행 순서
+
+### 1. 현재 상태 확인
 
 ```bash
-# 현재 버전 읽기
 grep 'MARKETING_VERSION' Veil/project.yml | grep -o '"[^"]*"' | tr -d '"'
 grep '^VERSION' Makefile | cut -d' ' -f3
-
-# 최근 태그
-git describe --tags --abbrev=0
-
-# 워킹 디렉토리 상태 확인
+git describe --tags --abbrev=0 2>/dev/null
 git status --short
 ```
 
-워킹 디렉토리에 커밋되지 않은 변경사항이 있으면 릴리스를 진행할지 사용자에게 확인한다.
+- 워킹 디렉토리가 dirty하면 어떤 파일인지 출력하고 중단한다 (의도치 않은 파일 포함 방지).
+- 두 파일의 버전이 이미 일치하고 해당 태그가 없는 경우 → 버전 업데이트 단계를 건너뛴다.
 
----
+### 2. 버전 결정
 
-## Step 2: 버전 결정
+- 인자로 버전이 주어진 경우 바로 사용한다.
+- 없으면 현재 버전을 보여주고 새 버전을 **한 번만** 묻는다.
+- semver `X.Y.Z` 형식이 아니면 재입력 요청.
+- **이후 모든 단계는 자동 진행.**
 
-인자로 버전이 주어지면 그것을 사용한다. 없으면 현재 버전을 보여주고 새 버전을 묻는다.
+### 3. 버전 파일 업데이트
 
-semver 형식(`X.Y.Z`) 검증:
-- `X.Y.Z` 형식이 아니면 재입력 요청
-- 현재 버전보다 낮으면 경고 후 확인
+이미 목표 버전과 일치하면 건너뛴다. 아니면 Edit 도구로 수정:
 
-버전 타입 판단 (릴리스 노트 생성 시 참고):
-- major/minor 변경 → 새 기능 포함 릴리스
-- patch 변경 → 버그 수정 릴리스
+- `Veil/project.yml` → `MARKETING_VERSION: "X.Y.Z"`
+- `Makefile` → `VERSION := X.Y.Z`
 
----
-
-## Step 3: 버전 파일 업데이트
-
-Edit 도구로 두 파일을 수정한다:
-
-**`Veil/project.yml`**:
-```
-MARKETING_VERSION: "OLD" → MARKETING_VERSION: "NEW"
-```
-
-**`Makefile`**:
-```
-VERSION := OLD → VERSION := NEW
-```
-
-수정 후 두 파일의 버전이 일치하는지 확인한다.
-
----
-
-## Step 4: 빌드 검증
+### 4. 빌드 검증
 
 ```bash
-make setup   # xcodegen으로 project.pbxproj 재생성
-make build   # Release 빌드
+make setup
+make build
 ```
 
-빌드 실패 시 즉시 중단하고 오류를 보고한다. 버전 파일 변경을 되돌리지는 않는다(사용자가 판단).
+빌드 실패 시 즉시 중단하고 오류 로그를 출력한다.
 
----
-
-## Step 5: 릴리스 노트 생성
+### 5. 릴리스 노트 자동 생성
 
 ```bash
 PREV_TAG=$(git describe --tags --abbrev=0)
 git log ${PREV_TAG}..HEAD --pretty=format:"%s (%h)" --no-merges
 ```
 
-커밋을 conventional commits 기준으로 분류해 한글 릴리스 노트를 작성한다:
+conventional commits 기준으로 분류. 섹션에 해당 커밋이 없으면 생략:
 
 ```markdown
 ## 새 기능
-- (feat: 커밋들)
+- feat: 커밋 내용 (hash)
 
 ## 버그 수정
-- (fix: 커밋들)
+- fix: 커밋 내용 (hash)
 
 ## 개선
-- (refactor:, perf: 커밋들)
+- refactor:, perf: 커밋 내용 (hash)
 
 ## 문서
-- (docs: 커밋들)
+- docs: 커밋 내용 (hash)
 
 ## 기타
-- (chore:, ci:, style: 커밋들)
+- chore:, ci:, style: 커밋 내용 (hash)
 
 ---
 
@@ -109,87 +85,70 @@ brew tap neocode24/tap
 brew install --cask --no-quarantine veil
 \`\`\`
 
-**전체 변경사항**: https://github.com/neocode24/veil/compare/PREV_TAG...vNEW_VERSION
+**전체 변경사항**: https://github.com/neocode24/veil/compare/PREV_TAG...vNEW
 ```
 
-분류할 커밋이 없는 섹션은 생략한다.
+### 6. Git 커밋 + 태그
 
-생성된 릴리스 노트를 사용자에게 보여주고, 수정이 필요한지 확인한다. "수정" 요청 시 사용자가 원하는 내용을 받아 반영한다.
-
----
-
-## Step 6: Git 커밋 + 태그
+버전 파일을 업데이트한 경우에만 커밋. 태그는 항상 생성:
 
 ```bash
+# 버전 파일 변경이 있을 때만
 git add Veil/project.yml Makefile Veil/Veil.xcodeproj/project.pbxproj
 git commit -m "chore: 버전 X.Y.Z으로 bump"
+
 git tag vX.Y.Z
 ```
 
----
-
-## Step 7: Push
+### 7. Push
 
 ```bash
 git push origin main
 git push origin vX.Y.Z
 ```
 
----
+push 실패 시 중단하고 수동 명령어를 안내한다.
 
-## Step 8: GitHub Actions 모니터링
+### 8. GitHub Actions 폴링
 
-태그 push 직후 워크플로우가 트리거된다. 완료될 때까지 상태를 폴링한다.
+태그 push 후 최대 10분간 10초 간격으로 상태를 확인한다. 진행 중에는 사용자에게 아무것도 출력하지 않는다.
 
 ```bash
-# 최신 run 상태 확인 (10초 간격, 최대 10분)
-gh run list --repo neocode24/veil --limit 3
-gh run view RUN_ID --repo neocode24/veil
+# run ID 확보 (push 후 약 5초 대기)
+gh run list --repo neocode24/veil --limit 1 --json databaseId,status,conclusion
+
+# 완료까지 반복 확인
+gh run view RUN_ID --repo neocode24/veil --json status,conclusion,jobs
 ```
 
-상태를 단계별로 보고한다:
-- `queued` → 대기 중
-- `in_progress` → 빌드/패키징 진행 중
-- `completed / success` → 성공
-- `completed / failure` → 실패 (로그 URL 제공)
+- 10분 초과 시: 폴링 중단하고 run URL을 최종 보고에 포함.
+- failure 시: 실패한 job 이름과 로그 URL을 최종 보고에 포함.
 
-Actions 워크플로우가 하는 일:
-1. Release 빌드 + zip 패키징
-2. GitHub Release 생성
-3. `homebrew-tap` repo의 `Casks/veil.rb` 업데이트
+### 9. brew-tap 확인
 
----
-
-## Step 9: brew-tap 업데이트 확인
-
-Actions 성공 후 homebrew-tap 변경을 확인한다:
+Actions 성공 후 실행:
 
 ```bash
-# veil.rb의 최신 커밋 확인
-gh api repos/neocode24/homebrew-tap/commits?path=Casks/veil.rb&per_page=1 \
+gh api "repos/neocode24/homebrew-tap/commits?path=Casks/veil.rb&per_page=1" \
   --jq '.[0] | {sha: .sha[:7], message: .commit.message, date: .commit.author.date}'
 
-# veil.rb 내용에서 버전과 sha256 확인
 gh api repos/neocode24/homebrew-tap/contents/Casks/veil.rb \
   --jq '.content' | base64 -d | grep -E 'version|sha256|url'
 ```
 
-새 버전(`vX.Y.Z`)이 반영됐는지 확인 후 결과를 보고한다.
+### 10. 최종 보고
 
----
-
-## Step 10: 최종 보고
-
-릴리스 완료 후 요약을 출력한다:
+모든 단계 완료 후 한 번에 출력:
 
 ```
-릴리스 완료: vX.Y.Z
+릴리스 완료: v0.4.1
 
-GitHub Release : https://github.com/neocode24/veil/releases/tag/vX.Y.Z
-Actions 결과  : success (소요: N분)
-brew-tap      : Casks/veil.rb 업데이트 확인 (sha: XXXXXXX)
+버전 업데이트  : 0.4.0 → 0.4.1
+GitHub Release : https://github.com/neocode24/veil/releases/tag/v0.4.1
+Actions        : success (소요: 3분 12초)
+brew-tap       : Casks/veil.rb 업데이트 확인 (커밋 abc1234, 버전 0.4.1)
 
-brew upgrade --cask veil 으로 업데이트 가능
+brew upgrade --cask veil 로 업데이트 가능
 ```
 
 ---
@@ -198,7 +157,9 @@ brew upgrade --cask veil 으로 업데이트 가능
 
 | 상황 | 대응 |
 |------|------|
+| 워킹 디렉토리 dirty | 중단, 파일 목록 출력 |
 | 빌드 실패 | 중단, 오류 로그 출력 |
-| push 실패 | 중단, 수동 push 명령어 안내 |
-| Actions 10분 초과 | 폴링 중단, run URL 제공 |
-| brew-tap 미반영 | 경고만, Actions 로그 URL 제공 |
+| push 실패 | 중단, 수동 명령어 안내 |
+| Actions 10분 초과 | 중단 없이 run URL만 보고 |
+| Actions 실패 | 실패 job + 로그 URL 보고 |
+| brew-tap 미반영 | 경고만, Actions 로그 URL 포함 |
