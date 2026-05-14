@@ -44,6 +44,7 @@ final class StatusBarController {
         let menuBarView = MenuBarView(
             appState: appState,
             onRestore: { [weak delegate] in
+                appState.manualVeilActive = false
                 delegate?.overlayManager.removeAll()
                 appState.isOverlayActive = false
                 appState.blankedDisplayNames.removeAll()

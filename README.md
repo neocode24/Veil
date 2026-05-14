@@ -4,7 +4,7 @@
 
 # Veil
 
-**Softly blanks other monitors when fullscreen video is detected on macOS**
+**Softly blanks other monitors when fullscreen video is detected — or instantly on demand with a hotkey**
 
 [![GitHub release](https://img.shields.io/github/v/release/neocode24/veil?style=flat-square&label=release)](https://github.com/neocode24/veil/releases)
 [![Homebrew](https://img.shields.io/badge/homebrew-cask-orange?style=flat-square&logo=homebrew&logoColor=white)](https://github.com/neocode24/homebrew-tap)
@@ -27,6 +27,7 @@
 ## Features
 
 - **Auto-detection** — Detects fullscreen video playback on any monitor via CoreGraphics
+- **Manual Veil** — Press `⌃⌥⌘ V` or toggle from the menu bar to veil instantly, regardless of fullscreen state
 - **Soft blank** — Instantly overlays inactive monitors with a black veil
 - **FlipClock** — Optional clock display on veiled monitors
 - **Lightweight** — Lives in the menu bar, no Dock icon, near-zero CPU at idle
@@ -50,10 +51,20 @@ Download the latest `.zip` from [Releases](https://github.com/neocode24/veil/rel
 
 ## How It Works
 
+### Auto Mode
+
 1. Veil monitors all windows using CoreGraphics APIs
 2. When a known media app enters fullscreen, it identifies the active monitor
 3. Every other connected monitor gets a black overlay (soft-off / veil)
 4. When fullscreen exits, all monitors are instantly restored
+
+### Manual Mode
+
+Press `⌃⌥⌘ V` or toggle **Veil Now** in the menu bar to veil on demand:
+
+- The monitor under your cursor stays visible; all others are veiled
+- **Manual mode takes priority over auto-detection** — fullscreen changes are ignored while active
+- Press `⌃⌥⌘ V` again, toggle **Veil Now** off, or click **Restore All** to exit
 
 ## Supported Apps
 

@@ -4,7 +4,7 @@
 
 # Veil
 
-**전체화면 영상 감지 시 다른 모니터를 부드럽게 가려주는 macOS 앱**
+**전체화면 영상 감지 또는 단축키로 즉시 다른 모니터를 부드럽게 가려주는 macOS 앱**
 
 [![GitHub release](https://img.shields.io/github/v/release/neocode24/veil?style=flat-square&label=release)](https://github.com/neocode24/veil/releases)
 [![Homebrew](https://img.shields.io/badge/homebrew-cask-orange?style=flat-square&logo=homebrew&logoColor=white)](https://github.com/neocode24/homebrew-tap)
@@ -27,6 +27,7 @@
 ## 주요 기능
 
 - **자동 감지** — CoreGraphics API로 모든 모니터의 전체화면 영상 재생 자동 감지
+- **수동 베일** — `⌃⌥⌘ V` 단축키 또는 메뉴바 토글로 전체화면 여부와 무관하게 즉시 베일 적용
 - **소프트 블랭크** — 비활성 모니터를 즉시 검은 베일로 덮음
 - **FlipClock** — 베일이 적용된 모니터에 선택적 시계 표시
 - **경량 실행** — 메뉴바에서 실행, Dock 아이콘 없음, 유휴 시 CPU 사용량 거의 없음
@@ -50,10 +51,20 @@ brew install --cask --no-quarantine veil
 
 ## 작동 방식
 
+### 자동 모드
+
 1. Veil이 CoreGraphics API를 통해 모든 창을 모니터링
 2. 지원 미디어 앱이 전체화면으로 진입하면 활성 모니터를 식별
 3. 나머지 모든 모니터에 검은 오버레이(베일) 적용
 4. 전체화면 종료 시 모든 모니터 즉시 복원
+
+### 수동 모드
+
+`⌃⌥⌘ V` 단축키 또는 메뉴바의 **Veil Now** 토글로 즉시 베일을 적용:
+
+- 커서가 있는 모니터는 그대로 유지되고, 나머지 모니터에 베일 적용
+- **수동 모드는 자동 감지보다 우선** — 수동 모드가 활성 상태이면 전체화면 변화를 무시
+- `⌃⌥⌘ V` 재입력, **Veil Now** 토글 해제, 또는 **Restore All** 클릭으로 종료
 
 ## 지원 앱
 

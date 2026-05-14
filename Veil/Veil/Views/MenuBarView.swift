@@ -32,6 +32,7 @@ struct MenuBarView: View {
         .onChange(of: appState.showSecondsClock) { _, _ in onSettingsChanged() }
         .onChange(of: appState.launchAtLogin) { _, _ in onSettingsChanged() }
         .onChange(of: showExcludeApps) { _, _ in onSettingsChanged() }
+        .onChange(of: appState.manualVeilActive) { _, _ in onSettingsChanged() }
     }
 
     // MARK: - Drag Handle
@@ -88,6 +89,17 @@ struct MenuBarView: View {
                 }
                 .foregroundStyle(.orange)
             }
+
+            if appState.manualVeilActive {
+                Label {
+                    Text("Veiled Manually")
+                        .font(.system(size: DS.Font.caption))
+                } icon: {
+                    Image(systemName: "rectangle.on.rectangle.fill")
+                        .font(.system(size: 10))
+                }
+                .foregroundStyle(.blue)
+            }
         }
     }
 
@@ -136,6 +148,23 @@ struct MenuBarView: View {
 
     private var settingsSection: some View {
         VStack(alignment: .leading, spacing: DS.Spacing.sm) {
+            HStack {
+                Label("Veil Now", systemImage: "rectangle.on.rectangle")
+                    .font(.system(size: DS.Font.caption))
+                Spacer()
+                Text("⌃⌥⌘ V")
+                    .font(.system(size: DS.Font.tiny, weight: .medium))
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal, 4)
+                    .padding(.vertical, 2)
+                    .background(Color.primary.opacity(0.08))
+                    .clipShape(RoundedRectangle(cornerRadius: 4))
+                Toggle("", isOn: $appState.manualVeilActive)
+                    .toggleStyle(.switch)
+                    .labelsHidden()
+                    .controlSize(.small)
+            }
+
             HStack {
                 Label("Launch at Login", systemImage: "power")
                     .font(.system(size: DS.Font.caption))

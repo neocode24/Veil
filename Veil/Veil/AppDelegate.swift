@@ -6,6 +6,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     let statusBarController = StatusBarController()
     let fullscreenMonitor = FullscreenMonitor()
     let overlayManager = DisplayOverlayManager()
+    private var hotkeyMonitor: Any?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         ProcessInfo.processInfo.disableAutomaticTermination("Veil is monitoring displays")
@@ -34,6 +35,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             object: nil
         )
 
+        registerHotkey()
         NSLog("[Veil] launched — screens=\(NSScreen.screens.count) accessibility=\(AXIsProcessTrusted())")
     }
 
@@ -44,6 +46,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             overlayManager.removeAll()
             appState.isOverlayActive = false
             appState.blankedDisplayNames = []
+            return
+        }
+
+        if appState.manualVeilActive {
+            if let activeScreen = screenUnderCursor() {
+                showOverlays(excluding: activeScreen)
+            }
             return
         }
 
@@ -58,6 +67,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
+    func toggleManualVeil() {
+        if appState.manualVeilActive {
+            appState.manualVeilActive = false
+            refreshOverlays()
+        } else {
+            appState.manualVeilActive = true
+            if let activeScreen = screenUnderCursor() {
+                showOverlays(excluding: activeScreen)
+            }
+            statusBarController.refreshPanelSize()
+        }
+    }
+
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
         overlayManager.removeAll()
         return .terminateNow
@@ -69,6 +91,23 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     // MARK: - Private
 
+    private func registerHotkey() {
+        // ⌥V (Option+V, kVK_ANSI_V = 9)
+        hotkeyMonitor = NSEvent.addGlobalMonitorForEvents(matching: .keyDown) { [weak self] event in
+            let required: NSEvent.ModifierFlags = [.control, .option, .command]
+            guard event.modifierFlags.intersection(.deviceIndependentFlagsMask) == required,
+                  event.keyCode == 9 else { return }
+            Task { @MainActor [weak self] in
+                self?.toggleManualVeil()
+            }
+        }
+    }
+
+    private func screenUnderCursor() -> NSScreen? {
+        let point = NSEvent.mouseLocation
+        return NSScreen.screens.first { $0.frame.contains(point) }
+    }
+
     private func requestAccessibilityIfNeeded() {
         guard !AXIsProcessTrusted() else { return }
         // kAXTrustedCheckOptionPrompt = "AXTrustedCheckOptionPrompt"
@@ -78,6 +117,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc private func screenParametersChanged(_ notification: Notification) {
         appState.updateScreenInfo()
+        appState.manualVeilActive = false
         if appState.isOverlayActive {
             overlayManager.removeAll()
             appState.isOverlayActive = false
@@ -91,6 +131,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         Task { @MainActor in
             try? await Task.sleep(for: .milliseconds(1500))
             appState.updateScreenInfo()
+            appState.manualVeilActive = false
             overlayManager.removeAll()
             appState.isOverlayActive = false
             appState.blankedDisplayNames = []
@@ -107,6 +148,7 @@ extension AppDelegate: FullscreenMonitorDelegate {
         appState.fullscreenAppName = appName
 
         guard appState.isEnabled else { return }
+        guard !appState.manualVeilActive else { return }
 
         if let activeScreen {
             showOverlays(excluding: activeScreen)

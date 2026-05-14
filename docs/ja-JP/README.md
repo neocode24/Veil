@@ -4,7 +4,7 @@
 
 # Veil
 
-**フルスクリーン動画検出時に他のモニターをそっとブランクするmacOSアプリ**
+**フルスクリーン動画検出時またはホットキーで即座に他のモニターをそっとブランクするmacOSアプリ**
 
 [![GitHub release](https://img.shields.io/github/v/release/neocode24/veil?style=flat-square&label=release)](https://github.com/neocode24/veil/releases)
 [![Homebrew](https://img.shields.io/badge/homebrew-cask-orange?style=flat-square&logo=homebrew&logoColor=white)](https://github.com/neocode24/homebrew-tap)
@@ -27,6 +27,7 @@
 ## 主な機能
 
 - **自動検出** — CoreGraphics APIで任意のモニターのフルスクリーン動画再生を自動検出
+- **手動ベール** — `⌃⌥⌘ V`またはメニューバーのトグルで、フルスクリーン状態に関わらず即座にベールを適用
 - **ソフトブランク** — 非アクティブなモニターを即座に黒いベールで覆う
 - **FlipClock** — ベールが適用されたモニターにオプションで時計を表示
 - **軽量動作** — メニューバーで常駐、Dockアイコンなし、アイドル時のCPU使用量はほぼゼロ
@@ -50,10 +51,20 @@ brew install --cask --no-quarantine veil
 
 ## 動作の仕組み
 
+### 自動モード
+
 1. VeilがCoreGraphics APIですべてのウィンドウを監視
 2. 対応メディアアプリがフルスクリーンに入ると、アクティブなモニターを特定
 3. その他すべての接続モニターに黒いオーバーレイ（ベール）を適用
 4. フルスクリーン終了時にすべてのモニターを即座に復元
+
+### 手動モード
+
+`⌃⌥⌘ V`またはメニューバーの **Veil Now** トグルで即座にベールを適用:
+
+- カーソルがあるモニターはそのまま表示され、他のすべてのモニターにベールが適用される
+- **手動モードは自動検出より優先** — 手動モード中はフルスクリーンの変化を無視
+- `⌃⌥⌘ V`の再入力、**Veil Now** のトグルオフ、または **Restore All** のクリックで終了
 
 ## 対応アプリ
 

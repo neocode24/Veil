@@ -11,6 +11,7 @@ final class AppState {
     var isOverlayActive = false
     var fullscreenAppName: String?
     var blankedDisplayNames: [String] = []
+    var manualVeilActive = false
 
     var launchAtLogin: Bool {
         get { SMAppService.mainApp.status == .enabled }
