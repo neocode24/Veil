@@ -44,6 +44,40 @@ jobs:
           files: build/dist/Veil-${{ github.ref_name }}.zip
           generate_release_notes: true
 
+      - name: Generate Sparkle appcast
+        id: appcast
+        env:
+          SPARKLE_EDDSA_PRIVATE_KEY: ${{ secrets.SPARKLE_EDDSA_PRIVATE_KEY }}
+        run: |
+          if [ -z "$SPARKLE_EDDSA_PRIVATE_KEY" ]; then
+            echo "::warning::SPARKLE_EDDSA_PRIVATE_KEY secret not set. Skipping appcast generation."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          SPARKLE_VERSION="2.6.4"
+          curl -sL "https://github.com/sparkle-project/Sparkle/releases/download/${SPARKLE_VERSION}/Sparkle-${SPARKLE_VERSION}.tar.xz" -o Sparkle.tar.xz
+          tar xf Sparkle.tar.xz
+
+          mkdir -p appcast_output
+          cp build/dist/Veil-${{ github.ref_name }}.zip appcast_output/
+
+          echo "$SPARKLE_EDDSA_PRIVATE_KEY" > /tmp/eddsa_key.pem
+          ./Sparkle/bin/generate_appcast \
+            --ed-key-file /tmp/eddsa_key.pem \
+            --link-url-prefix "https://github.com/neocode24/Veil/releases/download/${{ github.ref_name }}/" \
+            appcast_output/
+          rm -f /tmp/eddsa_key.pem
+
+      - name: Deploy appcast to GitHub Pages
+        if: steps.appcast.outputs.skip != 'true'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./appcast_output
+          publish_branch: gh-pages
+          keep_files: true
+
       - name: Update Homebrew Tap
         env:
           HOMEBREW_DEPLOY_KEY: ${{ secrets.HOMEBREW_DEPLOY_KEY }}

@@ -24,6 +24,10 @@
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
 	<key>LSUIElement</key>
 	<true/>
+	<key>SUPublicEDKey</key>
+	<string>VNh84Az6N4fBNWH/VFMD/Z0mohSxKxNTdA6kmrIqURU=</string>
+	<key>SUFeedURL</key>
+	<string>https://neocode24.github.io/Veil/appcast.xml</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>MIT License. Copyright © 2025 neocode24.</string>
 </dict>

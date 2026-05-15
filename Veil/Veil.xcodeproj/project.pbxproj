@@ -19,6 +19,7 @@
 		673776B1E3EA5DF679D6526E /* MediaAppDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A4A5777101F6DEFE5736056 /* MediaAppDetector.swift */; };
 		75B294F30BEF0F01E8760776 /* VeilApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6174227325AD868B034A10BB /* VeilApp.swift */; };
 		81858CE05425C45B2A5ECAF5 /* AppListSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353E596768792A98C0EBF5DB /* AppListSettingsView.swift */; };
+		AE13C55910351226C1ECF152 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 59A7ADD9D12EAB93FCD1661B /* Sparkle */; };
 		BC7E85A74520227AD75A612D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E94A3619AF425880A3F48CF1 /* AppDelegate.swift */; };
 		CB31BC5E87FCFD180DABE765 /* DisplayOverlayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52DA3179161CD42FD9E2AA59 /* DisplayOverlayManager.swift */; };
 		FFE6703AE8E28B6704956666 /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2C65BFF2C85B97EBB6AEE0B /* MenuBarView.swift */; };
@@ -44,6 +45,17 @@
 		E94A3619AF425880A3F48CF1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EA46B33407E5BD551B51FF89 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		68C54B23D85755A3878340F2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AE13C55910351226C1ECF152 /* Sparkle in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		02E199E9FFCF4FF36A2F2966 /* Services */ = {
@@ -151,6 +163,7 @@
 			buildPhases = (
 				FF2D38BF50B0933E192BDAF0 /* Sources */,
 				11ADAFE04EF9A3A7EB43C690 /* Resources */,
+				68C54B23D85755A3878340F2 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -158,6 +171,7 @@
 			);
 			name = Veil;
 			packageProductDependencies = (
+				59A7ADD9D12EAB93FCD1661B /* Sparkle */,
 			);
 			productName = Veil;
 			productReference = C27B23FAFE3C177EB5040C6C /* Veil.app */;
@@ -186,6 +200,9 @@
 			);
 			mainGroup = D1C0CE43E804C61EAEF06722;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				6F6CB8236D474C0342989431 /* XCRemoteSwiftPackageReference "Sparkle" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 5D17F2C51DF361C4BA81680B /* Products */;
 			projectDirPath = "";
@@ -314,7 +331,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.4.0;
+				MARKETING_VERSION = 0.5.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.neocode24.Veil;
 				SDKROOT = macosx;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -397,7 +414,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.4.0;
+				MARKETING_VERSION = 0.5.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.neocode24.Veil;
 				SDKROOT = macosx;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -427,6 +444,25 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		6F6CB8236D474C0342989431 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.6.4;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		59A7ADD9D12EAB93FCD1661B /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6F6CB8236D474C0342989431 /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = C4D6CD16DB62B52C15013FC5 /* Project object */;
 }

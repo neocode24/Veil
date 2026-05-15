@@ -1,4 +1,5 @@
 import AppKit
+import Sparkle
 import SwiftUI
 
 @MainActor
@@ -8,7 +9,7 @@ final class StatusBarController {
     private var hostingView: NSHostingView<MenuBarView>!
     nonisolated(unsafe) private var eventMonitor: Any?
 
-    func setup(appState: AppState, delegate: AppDelegate) {
+    func setup(appState: AppState, delegate: AppDelegate, updater: SPUUpdater) {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
 
         if let button = statusItem.button {
@@ -43,6 +44,7 @@ final class StatusBarController {
 
         let menuBarView = MenuBarView(
             appState: appState,
+            updater: updater,
             onRestore: { [weak delegate] in
                 appState.manualVeilActive = false
                 delegate?.overlayManager.removeAll()

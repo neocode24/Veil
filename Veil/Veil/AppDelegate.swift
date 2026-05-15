@@ -1,4 +1,5 @@
 import AppKit
+import Sparkle
 
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
@@ -6,6 +7,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     let statusBarController = StatusBarController()
     let fullscreenMonitor = FullscreenMonitor()
     let overlayManager = DisplayOverlayManager()
+    let updaterController = SPUStandardUpdaterController(
+        startingUpdater: true,
+        updaterDelegate: nil,
+        userDriverDelegate: nil
+    )
     private var hotkeyMonitor: Any?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -13,7 +19,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         requestAccessibilityIfNeeded()
 
-        statusBarController.setup(appState: appState, delegate: self)
+        statusBarController.setup(appState: appState, delegate: self, updater: updaterController.updater)
         fullscreenMonitor.delegate = self
         fullscreenMonitor.appDetector = appState.mediaAppDetector
 

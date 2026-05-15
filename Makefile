@@ -4,7 +4,7 @@ APP_NAME := Veil
 SCHEME := Veil
 PROJECT := Veil/Veil.xcodeproj
 BUILD_DIR := build
-VERSION := 0.4.0
+VERSION := 0.5.0
 ZIP_NAME := $(APP_NAME)-$(VERSION).zip
 SIGN_IDENTITY := Veil Debug Build
 
@@ -19,6 +19,7 @@ build:
 		-scheme $(SCHEME) \
 		-configuration Release \
 		-derivedDataPath $(BUILD_DIR)/DerivedData \
+		-clonedSourcePackagesDirPath $(BUILD_DIR)/SourcePackages \
 		CODE_SIGN_IDENTITY="-" \
 		CODE_SIGNING_REQUIRED=NO \
 		ENABLE_HARDENED_RUNTIME=NO \
@@ -34,6 +35,7 @@ debug:
 		-scheme $(SCHEME) \
 		-configuration Debug \
 		-derivedDataPath $(BUILD_DIR)/DerivedData \
+		-clonedSourcePackagesDirPath $(BUILD_DIR)/SourcePackages \
 		CODE_SIGN_IDENTITY="-" \
 		CODE_SIGNING_REQUIRED=NO \
 		ENABLE_HARDENED_RUNTIME=NO \

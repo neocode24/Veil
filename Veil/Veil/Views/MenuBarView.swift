@@ -1,11 +1,16 @@
+import Combine
+import Sparkle
 import SwiftUI
 
 struct MenuBarView: View {
     @Bindable var appState: AppState
+    let updater: SPUUpdater
     let onRestore: () -> Void
     let onSettingsChanged: () -> Void
     let onQuit: () -> Void
     @State private var showExcludeApps = false
+    @State private var canCheckForUpdates = false
+    @State private var cancellables = Set<AnyCancellable>()
 
     var body: some View {
         VStack(alignment: .leading, spacing: DS.Spacing.md) {
@@ -249,6 +254,16 @@ struct MenuBarView: View {
                 .buttonStyle(.bordered)
                 .controlSize(.small)
             Spacer()
+            Button {
+                updater.checkForUpdates()
+            } label: {
+                Image(systemName: "arrow.triangle.2.circlepath")
+                    .font(.system(size: 10))
+            }
+            .buttonStyle(.bordered)
+            .controlSize(.small)
+            .disabled(!canCheckForUpdates)
+            .help("Check for Updates")
             Text(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "")
                 .font(.system(size: DS.Font.tiny))
                 .foregroundStyle(.tertiary)
@@ -256,6 +271,14 @@ struct MenuBarView: View {
             Button("Quit") { onQuit() }
                 .buttonStyle(.bordered)
                 .controlSize(.small)
+        }
+        .onAppear {
+            updater.publisher(for: \.canCheckForUpdates)
+                .receive(on: DispatchQueue.main)
+                .sink { [self] value in
+                    self.canCheckForUpdates = value
+                }
+                .store(in: &cancellables)
         }
     }
 }
