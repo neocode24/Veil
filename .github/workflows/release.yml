@@ -56,17 +56,18 @@ jobs:
           fi
 
           SPARKLE_VERSION="2.6.4"
+          mkdir -p sparkle-tools && cd sparkle-tools
           curl -sL "https://github.com/sparkle-project/Sparkle/releases/download/${SPARKLE_VERSION}/Sparkle-${SPARKLE_VERSION}.tar.xz" -o Sparkle.tar.xz
           tar xf Sparkle.tar.xz
 
-          mkdir -p appcast_output
-          cp build/dist/Veil-${{ github.ref_name }}.zip appcast_output/
+          mkdir -p ../appcast_output
+          cp ../build/dist/Veil-${{ github.ref_name }}.zip ../appcast_output/
 
           echo "$SPARKLE_EDDSA_PRIVATE_KEY" > /tmp/eddsa_key.pem
-          ./Sparkle/bin/generate_appcast \
+          ./bin/generate_appcast \
             --ed-key-file /tmp/eddsa_key.pem \
             --link-url-prefix "https://github.com/neocode24/Veil/releases/download/${{ github.ref_name }}/" \
-            appcast_output/
+            ../appcast_output/
           rm -f /tmp/eddsa_key.pem
 
       - name: Deploy appcast to GitHub Pages
