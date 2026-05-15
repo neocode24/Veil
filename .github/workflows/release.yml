@@ -66,7 +66,7 @@ jobs:
           echo "$SPARKLE_EDDSA_PRIVATE_KEY" > /tmp/eddsa_key.pem
           ./bin/generate_appcast \
             --ed-key-file /tmp/eddsa_key.pem \
-            --link-url-prefix "https://github.com/neocode24/Veil/releases/download/${{ github.ref_name }}/" \
+            --download-url-prefix "https://github.com/neocode24/Veil/releases/download/${{ github.ref_name }}/" \
             ../appcast_output/
           rm -f /tmp/eddsa_key.pem
 
