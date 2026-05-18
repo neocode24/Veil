@@ -1,17 +1,21 @@
 import AppKit
 import SwiftUI
 
-struct ExcludedAppsView: View {
+struct AppListSettingsView: View {
     @Bindable var appState: AppState
     var onAppsChanged: (() -> Void)?
     var onLayout: (() -> Void)?
     @State private var showPicker = false
     @State private var availableApps: [String] = []
 
+    private var detector: MediaAppDetector { appState.mediaAppDetector }
+    private var isExcludeMode: Bool { detector.filterMode == .exclude }
+    private var currentApps: Set<String> { isExcludeMode ? detector.excludedApps : detector.includedApps }
+
     var body: some View {
         VStack(alignment: .leading, spacing: DS.Spacing.md) {
             HStack {
-                Text("Exclude Apps")
+                Text(isExcludeMode ? "Exclude Apps" : "Include Apps")
                     .font(.system(size: DS.Font.body, weight: .semibold))
                 Spacer()
                 Button(action: {
@@ -31,12 +35,12 @@ struct ExcludedAppsView: View {
                     .transition(.opacity.combined(with: .move(edge: .top)))
             }
 
-            if appState.mediaAppDetector.excludedApps.isEmpty {
-                Text("No excluded apps. All fullscreen apps will trigger blanking.")
+            if currentApps.isEmpty {
+                Text(emptyMessage)
                     .font(.system(size: DS.Font.tiny))
                     .foregroundStyle(.tertiary)
             } else {
-                excludedList
+                appList
             }
         }
         .padding(DS.Spacing.md)
@@ -48,10 +52,20 @@ struct ExcludedAppsView: View {
             }
             onLayout?()
         }
+        .onChange(of: detector.filterMode) { _, _ in
+            if showPicker {
+                refreshAvailableApps()
+            }
+        }
+    }
+
+    private var emptyMessage: String {
+        isExcludeMode
+            ? "No excluded apps. All fullscreen apps will trigger blanking."
+            : "No included apps. Add apps to trigger blanking only for them."
     }
 
     private func refreshAvailableApps() {
-        let excluded = appState.mediaAppDetector.excludedApps
         availableApps = NSWorkspace.shared.runningApplications
             .filter { app in
                 app.activationPolicy == .regular
@@ -59,7 +73,7 @@ struct ExcludedAppsView: View {
                 && app.processIdentifier != ProcessInfo.processInfo.processIdentifier
             }
             .compactMap { $0.localizedName }
-            .filter { !excluded.contains($0) }
+            .filter { !currentApps.contains($0) }
             .sorted()
     }
 
@@ -74,7 +88,11 @@ struct ExcludedAppsView: View {
                 }
                 ForEach(availableApps, id: \.self) { appName in
                     AddAppRow(appName: appName) {
-                        appState.mediaAppDetector.toggleExclusion(appName)
+                        if isExcludeMode {
+                            detector.toggleExclusion(appName)
+                        } else {
+                            detector.toggleInclusion(appName)
+                        }
                         availableApps.removeAll { $0 == appName }
                         onAppsChanged?()
                     }
@@ -84,11 +102,15 @@ struct ExcludedAppsView: View {
         .frame(maxHeight: 150)
     }
 
-    private var excludedList: some View {
+    private var appList: some View {
         VStack(alignment: .leading, spacing: 2) {
-            ForEach(appState.mediaAppDetector.excludedApps.sorted(), id: \.self) { appName in
+            ForEach(currentApps.sorted(), id: \.self) { appName in
                 RemoveAppRow(appName: appName) {
-                    appState.mediaAppDetector.removeExclusion(appName)
+                    if isExcludeMode {
+                        detector.removeExclusion(appName)
+                    } else {
+                        detector.removeInclusion(appName)
+                    }
                     onAppsChanged?()
                 }
             }

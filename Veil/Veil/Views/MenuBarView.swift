@@ -230,7 +230,7 @@ struct MenuBarView: View {
                         .font(.system(size: 8, weight: .semibold))
                         .foregroundStyle(.secondary)
                         .rotationEffect(.degrees(showExcludeApps ? 90 : 0))
-                    Text("Exclude Apps (\(appState.mediaAppDetector.excludedApps.count))")
+                    Text(appListTitle)
                         .font(.system(size: DS.Font.caption))
                         .foregroundStyle(.primary)
                     Spacer()
@@ -240,10 +240,40 @@ struct MenuBarView: View {
             .buttonStyle(.plain)
 
             if showExcludeApps {
-                ExcludedAppsView(appState: appState, onAppsChanged: onSettingsChanged, onLayout: onSettingsChanged)
-                    .transition(.opacity.combined(with: .move(edge: .top)))
+                VStack(alignment: .leading, spacing: DS.Spacing.xs) {
+                    filterModePicker
+                    AppListSettingsView(appState: appState, onAppsChanged: onSettingsChanged, onLayout: onSettingsChanged)
+                        .transition(.opacity.combined(with: .move(edge: .top)))
+                }
             }
         }
+    }
+
+    private var appListTitle: String {
+        let detector = appState.mediaAppDetector
+        let count = detector.filterMode == .exclude ? detector.excludedApps.count : detector.includedApps.count
+        let label = detector.filterMode == .exclude ? "Exclude Apps" : "Include Apps"
+        return "\(label) (\(count))"
+    }
+
+    private var filterModePicker: some View {
+        HStack(spacing: 0) {
+            Text("Filter Mode")
+                .font(.system(size: DS.Font.tiny))
+                .foregroundStyle(.tertiary)
+            Spacer()
+            Picker("", selection: Binding(
+                get: { appState.mediaAppDetector.filterMode },
+                set: { appState.mediaAppDetector.setFilterMode($0); onSettingsChanged() }
+            )) {
+                Text("Exclude").tag(FilterMode.exclude)
+                Text("Include").tag(FilterMode.include)
+            }
+            .pickerStyle(.segmented)
+            .frame(width: 140)
+            .controlSize(.small)
+        }
+        .padding(.horizontal, DS.Spacing.md)
     }
 
     // MARK: - Controls
