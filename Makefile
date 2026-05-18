@@ -4,7 +4,7 @@ APP_NAME := Veil
 SCHEME := Veil
 PROJECT := Veil/Veil.xcodeproj
 BUILD_DIR := build
-VERSION := 0.6.0
+VERSION := 0.6.1
 ZIP_NAME := $(APP_NAME)-$(VERSION).zip
 SIGN_IDENTITY := Veil Debug Build
 
