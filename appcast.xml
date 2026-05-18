@@ -3,12 +3,12 @@
     <channel>
         <title>Veil</title>
         <item>
-            <title>0.5.0</title>
-            <pubDate>Fri, 15 May 2026 10:43:19 +0000</pubDate>
+            <title>0.6.0</title>
+            <pubDate>Mon, 18 May 2026 12:49:24 +0000</pubDate>
             <sparkle:version>1</sparkle:version>
-            <sparkle:shortVersionString>0.5.0</sparkle:shortVersionString>
+            <sparkle:shortVersionString>0.6.0</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-            <enclosure url="https://github.com/neocode24/Veil/releases/download/v0.5.0/Veil-v0.5.0.zip" length="4858822" type="application/octet-stream" sparkle:edSignature="sW+AS1cDveJXlRSqzHjThq6sarbIQ0mNdKmhwokeRm1ONvymtTRRLJQvIz4ZPfAT/rue/IYaVJt93Nu2ReUeAg=="/>
+            <enclosure url="https://github.com/neocode24/Veil/releases/download/v0.6.0/Veil-v0.6.0.zip" length="4877039" type="application/octet-stream" sparkle:edSignature="0hF2KE8rm13rk5Gg1y6BJyyyUVjSNwIjo2/8HZTr4chmL9b8R6ZOZgaH3ano3xTEG+rnXvRCmwlwQZENV0SHDg=="/>
         </item>
     </channel>
 </rss>
