@@ -9,6 +9,7 @@ macOS menu bar app - fullscreen 감지 시 다른 모니터를 blanking
 | 파일 | 필드 | 비고 |
 |------|------|------|
 | `Veil/project.yml` | `MARKETING_VERSION` | xcodegen 소스 |
+| `Veil/project.yml` | `CURRENT_PROJECT_VERSION` | Sparkle build number, 매 릴리스마다 +1 |
 | `Makefile` | `VERSION` | 로컬 빌드/패키징 |
 
 `Veil/Veil.xcodeproj/project.pbxproj`는 xcodegen이 자동 생성하므로 직접 수정 불필요.
@@ -42,9 +43,9 @@ git push && git push origin vx.y.z
 
 - `StatusBarController` - 메뉴바 아이템 + NSPanel popover
 - `MenuBarView` - popover SwiftUI 콘텐츠
-- `ExcludedAppsView` - 제외 앱 관리
+- `ExcludedAppsView` - 제외 앱 관리 → `AppListSettingsView`로 리팩토링됨
 - `AppState` - @Observable 전역 상태
 - `DisplayOverlayManager` - 모니터 blanking 오버레이
 - `FullscreenMonitor` / `FullscreenDetector` - fullscreen 앱 감지
-- `MediaAppDetector` - 제외 앱 목록 관리 (UserDefaults)
+- `MediaAppDetector` - 앱 필터링 (exclude/include 모드, UserDefaults)
 - `DS` - 디자인 시스템 토큰
